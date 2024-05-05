@@ -13,35 +13,22 @@ extends CharacterBody2D
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 func _physics_process(delta):
-
-		
 	# Handle physics
 	if not is_on_floor():
 		Midair += 1
-	if SensorDir == "D":
 		set_up_direction(Vector2.UP)
 		velocity.y += (gravity * delta)
 		if velocity.y > 19000 and not is_on_floor():
 			velocity.y = 19000
-	elif SensorDir == "U":
-		set_up_direction(Vector2.DOWN)
-		velocity.y += (gravity * delta)*-1
-	elif SensorDir == "R":
-		set_up_direction(Vector2.LEFT)
-		velocity.x += (gravity * delta)*1
-	elif SensorDir == "L":
-		set_up_direction(Vector2.RIGHT)
-		velocity.x += (gravity * delta)*-1
 		
 	#Direction facing
-	var forward = Vector2.from_angle((deg_to_rad(rotation_degrees-90)))
 	if Speed == 0:
 		LR = LR
 	elif Speed < 0:
 		LR = "L"
 	elif Speed > 0:
 		LR = "R"
-	# Code for decelerration
+	# Code for changing speed around
 	var Dir = Input.get_axis("left", "right")
 	if Dir:
 		if not (Speed/(abs(Speed)*Dir)) == 1:
@@ -55,17 +42,20 @@ func _physics_process(delta):
 			else:
 					Speed = 0
 	
-	if is_on_floor() and Midair < 5:
+	if is_on_floor():
 		#actually moves player
 		move_local_x(Speed*sin(rotation))
 		move_local_y(Speed*cos(rotation))
-		Jump = 0
-		#Supposed to handle clinging again
-		velocity.x -= (cos(rotation))*(abs(Speed))
-		velocity.y -= (sin(rotation))*((abs(Speed)))
+		if Midair > 0:
+			Midair -= 1
+		Jump=0
+		move_local_x(cos(rotation))
+		move_local_y(sin(rotation))
 	else:
+		velocity.x= Speed
+	#else:
 		#midair movement
-		velocity.x = Speed
+		#velocity.x = Speed
 	#jumping
 	if is_on_floor():
 		if Input.is_action_just_pressed("jump") and is_on_floor():
@@ -93,4 +83,4 @@ func _physics_process(delta):
 	else:
 		SensorDir = "U"
 		
-	print(velocity)
+	print(Midair)
