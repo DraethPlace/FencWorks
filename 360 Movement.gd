@@ -4,7 +4,7 @@ extends CharacterBody2D
 @export var Acceleration = 8
 @export var MaxSpeed = 500.0
 @export var JumpVel = 650.0
-@export var SensorDir = "h"
+@export var SensorDir = "D"
 @export var FallVel = 0
 @export var Speed = 0
 @export var Midair = 0
@@ -42,20 +42,15 @@ func _physics_process(delta):
 			else:
 					Speed = 0
 	
-	if is_on_floor():
+	if is_on_floor() and Midair < 10:
 		#actually moves player
-		move_local_x(Speed*sin(rotation))
-		move_local_y(Speed*cos(rotation))
+		move_local_x(Speed*cos(rotation))
+		move_local_y(Speed*sin(rotation))
 		if Midair > 0:
-			Midair -= 1
+			Midair += -1
 		Jump=0
-		move_local_x(cos(rotation))
-		move_local_y(sin(rotation))
-	else:
+	elif Midair >= 10:
 		velocity.x= Speed
-	#else:
-		#midair movement
-		#velocity.x = Speed
 	#jumping
 	if is_on_floor():
 		if Input.is_action_just_pressed("jump") and is_on_floor():
@@ -64,6 +59,8 @@ func _physics_process(delta):
 			Speed += -JumpVel * cos(rotation+1.5707963267949)
 			velocity.y += -JumpVel * cos(rotation)
 			rotation=0
+			move_local_x(cos(rotation)*(abs(Speed/2)))
+			move_local_y(sin(rotation)*(abs(Speed/2)))
 	if Input.is_action_just_released("jump") and velocity.y < -200:
 		velocity.y = -200
 	move_and_slide()
@@ -82,5 +79,9 @@ func _physics_process(delta):
 		SensorDir = "R"
 	else:
 		SensorDir = "U"
-		
 	print(Midair)
+
+
+func _inside_tilemap():
+	move_local_x((sin(rotation)*(-1)))
+	move_local_y((cos(rotation)*(-1)))

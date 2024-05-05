@@ -1,13 +1,18 @@
-[gd_scene load_steps=8 format=3 uid="uid://dbkxkairk6ogq"]
+[gd_scene load_steps=10 format=3 uid="uid://dbkxkairk6ogq"]
 
 [ext_resource type="Script" path="res://360 Movement.gd" id="1_pd852"]
 [ext_resource type="Texture2D" uid="uid://cnkx472aqdrb8" path="res://51473563858_e00396a563_b.jpg" id="2_tmnif"]
 [ext_resource type="Script" path="res://LR.gd" id="3_mxe3d"]
 [ext_resource type="Texture2D" uid="uid://domx41tyv3s3n" path="res://PlaceHolder.png" id="3_ojr8n"]
+[ext_resource type="Script" path="res://Overlap.gd" id="4_16upu"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_krp03"]
 radius = 12.0
 height = 42.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ov0mp"]
+radius = 1.1
+height = 4.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qqx6x"]
 resource_name = "Placeholder"
@@ -114,12 +119,23 @@ script = ExtResource("3_mxe3d")
 
 [node name="Cam" type="Camera2D" parent="Fenc 360"]
 position = Vector2(1.33514e-05, -1.19209e-06)
+limit_smoothed = true
 
 [node name="CollideBox" type="CollisionShape2D" parent="Fenc 360"]
 shape = SubResource("CapsuleShape2D_krp03")
+
+[node name="Overlap" type="Area2D" parent="Fenc 360"]
+scale = Vector2(10, 10)
+disable_mode = 2
+script = ExtResource("4_16upu")
+
+[node name="Sense" type="CollisionShape2D" parent="Fenc 360/Overlap"]
+shape = SubResource("CapsuleShape2D_ov0mp")
 
 [node name="TileMap" type="TileMap" parent="."]
 position = Vector2(2, 1)
 tile_set = SubResource("TileSet_5v2du")
 format = 2
 layer_0/tile_data = PackedInt32Array(65536, 18, 0, 0, 720914, 268435456, 65535, 18, 0, -1, 18, 0, 131071, 18, 0, 65539, 18, 0, -65537, 18, 0, 65537, 18, 0, 65538, 18, 0, 3, 720914, 0, 196607, 18, 0, 131072, 18, 0, 131073, 18, 0, 131074, 18, 0, 131075, 18, 0, 131076, 18, 0, 65540, 18, 0, 4, 18, 0, -196604, 18, 0, -196605, 18, 0, -196606, 18, 0, -196607, 18, 0, -196608, 18, 0, -131073, 18, 0, -131074, 18, 0, -65538, 18, 0, -2, 18, 0, 65534, 18, 0, 131070, 18, 0, 196606, 18, 0, -131072, 720914, 805306368, -65532, 131090, 0, -65531, 196626, 0, 5, 18, 0, 65541, 18, 0, 131077, 18, 0, 6, 18, 0, 65542, 18, 0, 131078, 18, 0, 131079, 18, 0, 65543, 18, 0, 7, 18, 0, -65529, 786450, 0, -196603, 18, 0, -196602, 18, 0, -196601, 18, 0, -131065, 786450, 536870912, 131080, 18, 0, 65544, 18, 0, 8, 18, 0, -65528, 18, 0, -131064, 18, 0, -196600, 18, 0, -262136, 18, 0, -262137, 18, 0, -262140, 18, 0, -262139, 18, 0, -262138, 18, 0, -262142, 18, 0, -262141, 18, 0, -262143, 18, 0, -262144, 18, 0, -196609, 18, 0, -196610, 18, 0, 1, 262162, 0, 2, 196626, 0)
+
+[connection signal="body_entered" from="Fenc 360/Overlap" to="Fenc 360" method="_inside_tilemap"]
