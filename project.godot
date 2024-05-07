@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="FencWorks Godot"
-run/main_scene="res://fenc_works.tscn"
+run/main_scene="res://Scenes/Base Level.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 config/icon="res://download.png"
 

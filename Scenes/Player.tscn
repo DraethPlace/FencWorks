@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://c6umigpttu0tc"]
+
+[ext_resource type="Script" path="res://Scripts/Player/360 Movement.gd" id="1_dvh5r"]
+[ext_resource type="Texture2D" uid="uid://dvwuerayceb4i" path="res://Images/51473563858_e00396a563_b.jpg" id="2_ay0cf"]
+[ext_resource type="Script" path="res://Scripts/Player/LR.gd" id="3_jyttq"]
+[ext_resource type="Script" path="res://Scripts/Player/Cam.gd" id="4_qhq0l"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_krp03"]
+radius = 12.0
+height = 42.0
+
+[node name="Fenc 360" type="CharacterBody2D"]
+position = Vector2(299, 89)
+floor_constant_speed = true
+floor_block_on_wall = false
+floor_max_angle = 3.14159
+floor_snap_length = 12.0
+platform_floor_layers = 4278190082
+platform_wall_layers = 2
+script = ExtResource("1_dvh5r")
+
+[node name="PlaceHolder Fennec" type="Sprite2D" parent="."]
+show_behind_parent = true
+position = Vector2(-9.53674e-07, 7.45058e-06)
+scale = Vector2(0.0351391, 0.0410156)
+texture = ExtResource("2_ay0cf")
+script = ExtResource("3_jyttq")
+
+[node name="Cam" type="Camera2D" parent="."]
+position = Vector2(1.33514e-05, -1.19209e-06)
+position_smoothing_speed = 1.0
+script = ExtResource("4_qhq0l")
+
+[node name="CollideBox" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_krp03")

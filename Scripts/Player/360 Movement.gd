@@ -15,11 +15,17 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 func _physics_process(delta):
 	# Handle physics
 	if not is_on_floor():
+		if Midair <1:
+			velocity.y= sin(rotation)*Speed
+			Speed= cos(rotation)*Speed
 		Midair += 1
-		set_up_direction(Vector2.UP)
-		velocity.y += (gravity * delta)
-		if velocity.y > 19000 and not is_on_floor():
-			velocity.y = 19000
+		if Midair >4:
+			set_up_direction(Vector2.UP)
+			velocity.y += (gravity * delta)
+			if velocity.y > 19000 and not is_on_floor():
+				velocity.y = 19000
+			if not rotation == 0:
+				rotation = lerp_angle(rotation, 0, 0.2)
 		
 	#Direction facing
 	if Speed == 0:
@@ -42,25 +48,33 @@ func _physics_process(delta):
 			else:
 					Speed = 0
 	
-	if is_on_floor() and Midair < 10:
+	if is_on_floor():
 		#actually moves player
-		move_local_x(Speed*cos(rotation))
-		move_local_y(Speed*sin(rotation))
+		if SensorDir == "D":
+			velocity.x = Speed
+		elif SensorDir == "U":
+			velocity.x = -Speed
+		elif SensorDir == "R":
+			velocity.y = -Speed
+		elif SensorDir == "L":
+			velocity.y = Speed
 		if Midair > 0:
-			Midair += -1
-		Jump=0
+			Midair -= 5
+		else:
+			Midair=0
 	elif Midair >= 10:
 		velocity.x= Speed
 	#jumping
 	if is_on_floor():
 		if Input.is_action_just_pressed("jump") and is_on_floor():
+			set_up_direction(Vector2.UP)
+			Speed = cos(rotation)*Speed
+			velocity.y= sin(rotation)*Speed
 			Jump = 1
 			Midair = 10
-			Speed += -JumpVel * cos(rotation+1.5707963267949)
+			Speed += -JumpVel * cos(deg_to_rad(rotation_degrees+90))
 			velocity.y += -JumpVel * cos(rotation)
 			rotation=0
-			move_local_x(cos(rotation)*(abs(Speed/2)))
-			move_local_y(sin(rotation)*(abs(Speed/2)))
 	if Input.is_action_just_released("jump") and velocity.y < -200:
 		velocity.y = -200
 	move_and_slide()
@@ -73,15 +87,13 @@ func _physics_process(delta):
 	#handles The surface direction, wallrunning, ceiling running all that good sonis stuff
 	if rotation_degrees < 45 and rotation_degrees > -45:
 		SensorDir = "D"
+		set_up_direction(Vector2.UP)
 	elif rotation_degrees < 135 and rotation_degrees > 45:
 		SensorDir = "L"
+		set_up_direction(Vector2.RIGHT)
 	elif rotation_degrees < -45 and rotation_degrees > -135:
 		SensorDir = "R"
+		set_up_direction(Vector2.LEFT)
 	else:
 		SensorDir = "U"
-	print(Midair)
-
-
-func _inside_tilemap():
-	move_local_x((sin(rotation)*(-1)))
-	move_local_y((cos(rotation)*(-1)))
+		set_up_direction(Vector2.DOWN)
