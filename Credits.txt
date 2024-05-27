@@ -1,0 +1,17 @@
+
+    ______               _       __           __           ______              ___ __       __
+   / ____/__  ____  ____| |     / /___  _____/ /_______   / ____/_______  ____/ (_) /______/ /
+  / /_  / _ \/ __ \/ ___/ | /| / / __ \/ ___/ //_/ ___/  / /   / ___/ _ \/ __  / / __/ ___/ / 
+ / __/ /  __/ / / / /__ | |/ |/ / /_/ / /  / ,< (__  )  / /___/ /  /  __/ /_/ / / /_(__  )_/  
+/_/    \___/_/ /_/\___/ |__/|__/\____/_/  /_/|_/____/   \____/_/   \___/\__,_/_/\__/____(_)   
+                                                                                              
+
+Created by Sahara Studios
+Find us on Tumblr https://www.tumblr.com/blog/sahara-studios-dev
+
+Ascii Generator : https://www.patorjk.com/
+MentalBox/KelvinDaFloof : Programming help, Bug Fixing (scratch version)
+Godot Team: Making Godot
+Godot Community Server (https://discord.gg/4JBkykG) : Programming Help (Godot version)
+Sonic Physics Guide (https://info.sonicretro.org/Sonic_Physics_Guide) : 360 Physics documentation
+Aseprite Team: Making Aseprite
