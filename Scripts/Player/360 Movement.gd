@@ -17,6 +17,7 @@ var VelLR = "R"
 var crouch = "N"
 var PrevSpeed= Speed
 var TurnSpeed = Speed
+var HoldTimer: Timer
 #Mach 1 = 150
 #Mach 2 = 250
 #Mach 3 = 350
@@ -74,7 +75,7 @@ func _physics_process(delta):
 	elif Speed > -1:
 		VelLR = "R"
 	
-	floor_snap_length= (((abs(Speed))/32)*2)+18
+	floor_snap_length= (((abs(Speed))/32)*2)+20
 	
 	# Code for changing speed around
 	var Dir = Input.get_axis("left", "right")
@@ -89,7 +90,7 @@ func _physics_process(delta):
 					TurnSpeed = 1/(roundf(abs(Speed/100)))
 					MachTurn = 1
 				else:
-					CtrlLock== "N"
+					CtrlLock = "N"
 					Speed = (lerpf(roundf(Speed), roundf(PrevSpeed*0.5), TurnSpeed))
 				if abs(Speed) <= abs(PrevSpeed*0.5)+3:
 					Speed = -PrevSpeed
@@ -107,8 +108,7 @@ func _physics_process(delta):
 			elif not Speed == 0:
 				Speed = 0
 				MachTurn = 0
-	print(SensorDir)
-
+	print(Speed)
 	if is_on_floor():
 		#actually moves player
 		if SensorDir == "D":
@@ -152,13 +152,13 @@ func _physics_process(delta):
 			if not CtrlLock == "N":
 				Speed -=((int(LR == "R")*2)-1)*10
 			elif SensorDir == "U":
-				Speed -= sin(round(rotation))*(int(not Dir== 0))*13.5
+				Speed += sin(round(rotation))*((int(dash== 0))+1)*10
 			elif SensorDir == LR:
-				Speed -= ((cos(round(rotation)))*13.5)
+				Speed -= (sin(round(deg_to_rad(-rotation_degrees)))*((int(dash== 0))+1)*10)
 			elif SensorDir == "L" or SensorDir == "R":
-				Speed -= cos(round(rotation))*(int(not Dir== 0))*13.5
+				Speed -= sin(round(deg_to_rad(-rotation_degrees)))*((int(dash== 0))+1)*10
 			else:
-				Speed -= cos(round(rotation))*15
+				Speed -= sin(round(deg_to_rad(-rotation_degrees))*((int(dash== 0))+1)*10)
 	else:
 		CtrlLock = "N"
 	#handles The surface direction, wallrunning, ceiling running all that good sonis stuff
@@ -181,12 +181,14 @@ func _physics_process(delta):
 		set_up_direction(Vector2.DOWN)
 	if dash == 0:
 		floor_max_angle=67.5
-		if round(abs(rotation_degrees)) > 67.5:
+		if round(abs(rotation_degrees)) > 67.5 or SensorDir == "U":
 			if not SensorDir == "U":
-				Speed += 10*((int(SensorDir == "L")*2)-1)
+				velocity.x = 75 *((int(LR=="L")*2)-1)
+				Speed = 0
+				
 			else:
 				set_up_direction(Vector2.UP)
-				velocity.y = 50
+				velocity.y = 75
 	else:
 		floor_max_angle=180
 

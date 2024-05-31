@@ -39,3 +39,7 @@ script = ExtResource("4_qhq0l")
 shape = SubResource("CapsuleShape2D_krp03")
 debug_color = Color(0.387981, 0.355622, 1, 0.42)
 script = ExtResource("3_7vs75")
+
+[node name="Timer" type="Timer" parent="."]
+process_callback = 0
+wait_time = 1.5
