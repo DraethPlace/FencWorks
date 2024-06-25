@@ -18,11 +18,14 @@ var crouch = "N"
 var PrevSpeed= Speed
 var TurnSpeed = Speed
 var HoldTimer: Timer
+var Steps : float
+var stepping = 0
+@export var WallTouch: Area2D
 #Mach 1 = 150
-#Mach 2 = 250
-#Mach 3 = 350
-#Mach 4 = 500
-#Mach 5 = 600
+#Mach 2 = 300
+#Mach 3 = 450
+#Mach 4 = 600
+#Mach 5 = 750
 
 func _physics_process(delta):
 	# Handle physics
@@ -44,16 +47,16 @@ func _physics_process(delta):
 			crouch = "S"
 			Acceleration = 2
 		elif abs(Speed) < 50:
-			Acceleration = 15
+			Acceleration = 12.5
 			MaxSpeed = 100
 			crouch = "C"
 	else:
 		crouch = "N"
 		if dash == 1:
-			MaxSpeed = 600
+			MaxSpeed = 750
 			Acceleration = 10
 		else:
-			Acceleration = 15
+			Acceleration = 12.5
 			MaxSpeed = 200
 
 	if Input.is_action_pressed("machdash"):
@@ -75,7 +78,7 @@ func _physics_process(delta):
 	elif Speed > -1:
 		VelLR = "R"
 	
-	floor_snap_length= (((abs(Speed))/32)*2)+20
+	floor_snap_length= (((abs(Speed))/32)*2)+24
 	
 	# Code for changing speed around
 	var Dir = Input.get_axis("left", "right")
@@ -93,14 +96,24 @@ func _physics_process(delta):
 					CtrlLock = "N"
 					Speed = (lerpf(roundf(Speed), roundf(PrevSpeed*0.5), TurnSpeed))
 				if abs(Speed) <= abs(PrevSpeed*0.5)+3:
-					Speed = -PrevSpeed
-					for i in 10:
-						MachTurn = 0
+					MachTurn = 2
+				if MachTurn == 2:
+					if not abs(Speed) >= abs(PrevSpeed-10):
+						Speed = round(lerpf(roundf(Speed), roundf(-(PrevSpeed+((((int(LR=="L")*2)-1)*10)))), 0.8))
+					else:
+						Speed= -PrevSpeed
+						MachTurn=0
 		elif abs(Speed) < MaxSpeed:
+			PrevSpeed= Speed + (((int(LR=="R")*2)-1)*50)
+			TurnSpeed = 1/(roundf(abs(Speed/100)))
 			Speed += Dir*Acceleration
 			CtrlLock = 0
-		elif abs(Speed)> 600:
-			Speed = 600* ((int(VelLR == "R")*2)-1)
+			MachTurn = 0
+		elif abs(Speed)> 750:
+			TurnSpeed = 1/(roundf(abs(Speed/100)))
+			PrevSpeed= Speed + (((int(LR=="R")*2)-1)*50)
+			Speed = 750* ((int(VelLR == "R")*2)-1)
+			MachTurn = 0
 	elif is_on_floor() and CtrlLock == "N":
 		if dash == 0:
 			if abs(Speed) > 5:
@@ -108,7 +121,6 @@ func _physics_process(delta):
 			elif not Speed == 0:
 				Speed = 0
 				MachTurn = 0
-	print(Speed)
 	if is_on_floor():
 		#actually moves player
 		if SensorDir == "D":
@@ -128,9 +140,15 @@ func _physics_process(delta):
 	#jumping
 	if is_on_floor():
 		if Input.is_action_just_pressed("jump") and is_on_floor():
+			$Jump.play()
 			set_up_direction(Vector2.UP)
 			Speed = cos(rotation)*Speed
-			velocity.y= sin(rotation)*Speed
+			if is_on_wall_only():
+				velocity.y == JumpVel
+			elif abs(rotation_degrees) == 90:
+				velocity.y == JumpVel/2
+			else:
+				velocity.y= sin(rotation)*Speed
 			Jump = 1
 			Midair = 10
 			Speed += -JumpVel * cos(deg_to_rad(rotation_degrees+90))
@@ -141,7 +159,7 @@ func _physics_process(delta):
 	move_and_slide()
 	
 	#Wraps the angle and Slope Physics
-	if is_on_floor():
+	if is_on_wall_only():
 		var normal: Vector2 = get_floor_normal()
 		rotation =  lerp_angle(rotation, deg_to_rad(wrapf(rad_to_deg(normal.angle())+90, 180, -180)), .5)
 		if ((Speed < 50 and SensorDir == "R" and LR == "R") or (Speed > -50 and SensorDir == "L" and LR == "L")):
@@ -151,44 +169,55 @@ func _physics_process(delta):
 		if not roundf(absf((rotation_degrees)/10)) == 0:
 			if not CtrlLock == "N":
 				Speed -=((int(LR == "R")*2)-1)*10
-			elif SensorDir == "U":
-				Speed += sin(round(rotation))*((int(dash== 0))+1)*10
-			elif SensorDir == LR:
-				Speed -= (sin(round(deg_to_rad(-rotation_degrees)))*((int(dash== 0))+1)*10)
-			elif SensorDir == "L" or SensorDir == "R":
-				Speed -= sin(round(deg_to_rad(-rotation_degrees)))*((int(dash== 0))+1)*10
+			elif SensorDir == "U" and dash == 1:
+				Speed += sin(round(deg_to_rad(rotation_degrees)))*15
+			if not SensorDir == "U" and dash ==1:
+				Speed -= sin(round(deg_to_rad(-rotation_degrees)))*13
 			else:
-				Speed -= sin(round(deg_to_rad(-rotation_degrees))*((int(dash== 0))+1)*10)
+				Speed -= sin(round(deg_to_rad(-rotation_degrees)))*18
 	else:
 		CtrlLock = "N"
 	#handles The surface direction, wallrunning, ceiling running all that good sonis stuff
-
-	if SensorDir == "U" and abs(Speed) < 100:
-		set_up_direction(Vector2.UP)
-		velocity.y = 50
-
-	if round(rotation_degrees) <= 40 and round(rotation_degrees) >= -40:
-		SensorDir = "D"
-		set_up_direction(Vector2.UP)
-	elif round(rotation_degrees) <= -41 and round(rotation_degrees) >= -129:
-		SensorDir = "R"
-		set_up_direction(Vector2.LEFT)
-	elif round(rotation_degrees) >= 41 and round(rotation_degrees) <= 129:
-		SensorDir = "L"
-		set_up_direction(Vector2.RIGHT)
-	elif dash == 1:
-		SensorDir = "U"
-		set_up_direction(Vector2.DOWN)
+	if dash == 1 or is_on_floor():
+		if SensorDir == "U" and abs(Speed) < 100:
+			set_up_direction(Vector2.UP)
+			velocity.y = 50
+		if round(rotation_degrees) <= 40 and round(rotation_degrees) >= -40:
+			SensorDir = "D"
+			set_up_direction(Vector2.UP)
+		elif round(rotation_degrees) <= -41 and round(rotation_degrees) >= -129:
+			SensorDir = "R"
+			set_up_direction(Vector2.LEFT)
+		elif round(rotation_degrees) >= 41 and round(rotation_degrees) <= 129:
+			SensorDir = "L"
+			set_up_direction(Vector2.RIGHT)
+		elif dash == 1:
+			SensorDir = "U"
+			set_up_direction(Vector2.DOWN)
 	if dash == 0:
 		floor_max_angle=67.5
 		if round(abs(rotation_degrees)) > 67.5 or SensorDir == "U":
 			if not SensorDir == "U":
-				velocity.x = 75 *((int(LR=="L")*2)-1)
-				Speed = 0
-				
+				velocity.x = 75 *((int(VelLR=="L")*2)-1)
+				velocity.y = 0 
+				Speed = 50 *((int(VelLR=="L")*2)-1)
 			else:
 				set_up_direction(Vector2.UP)
 				velocity.y = 75
+				Speed = 75 *((int(LR=="L")*2)-1)
 	else:
 		floor_max_angle=180
+#func _process(delta):
+	#if is_on_floor():
+		#Steps += delta
+		#steppering()
+		#if stepping == 1 and not $M1Step.playing():
+			#$M1Step.play()
+
+func steppering():
+	stepping = roundf(sin(Steps*(Speed*.001)) * 1)
+	print(stepping)
+
+func roundy1000thee(x):
+	return (x *1000)/1
 

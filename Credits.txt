@@ -11,7 +11,11 @@ Find us on Tumblr https://www.tumblr.com/blog/sahara-studios-dev
 
 Ascii Generator : https://www.patorjk.com/
 MentalBox/KelvinDaFloof : Programming help, Bug Fixing (scratch version)
-Godot Team: Making Godot
+Godot Team: Engine Used
 Godot Community Server (https://discord.gg/4JBkykG) : Programming Help (Godot version)
 Sonic Physics Guide (https://info.sonicretro.org/Sonic_Physics_Guide) : 360 Physics documentation
-Aseprite Team: Making Aseprite
+Aseprite Team: Sprite Tool used
+Tour De Pizza : Inspiration, Temporary Sounds
+GalaxyTrail : Inspiration
+Sonic Team : Inspiration
+Dimps : Inspiration

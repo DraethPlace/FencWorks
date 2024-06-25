@@ -1,27 +1,34 @@
-[gd_scene load_steps=7 format=3 uid="uid://c6umigpttu0tc"]
+[gd_scene load_steps=10 format=3 uid="uid://c6umigpttu0tc"]
 
 [ext_resource type="Script" path="res://Scripts/Player/360 Movement.gd" id="1_dvh5r"]
 [ext_resource type="Texture2D" uid="uid://dvwuerayceb4i" path="res://Images/51473563858_e00396a563_b.jpg" id="2_ay0cf"]
 [ext_resource type="Script" path="res://Scripts/Player/Hitbox.gd" id="3_7vs75"]
 [ext_resource type="Script" path="res://Scripts/Player/LR.gd" id="3_jyttq"]
 [ext_resource type="Script" path="res://Scripts/Player/Cam.gd" id="4_qhq0l"]
+[ext_resource type="AudioStream" uid="uid://dotue2tayy81c" path="res://Sounds/Player/Jump.wav" id="6_qrngc"]
+[ext_resource type="AudioStream" uid="uid://c7cgy8v76oixp" path="res://Sounds/Player/Step.wav" id="7_gc6ea"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_krp03"]
 radius = 12.0
 height = 42.0
 
-[node name="Fenc 360" type="CharacterBody2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rn333"]
+size = Vector2(29, 4)
+
+[node name="Fenc 360" type="CharacterBody2D" node_paths=PackedStringArray("WallTouch")]
 process_mode = 3
 position = Vector2(299, 89)
 disable_mode = 2
 slide_on_ceiling = false
 floor_stop_on_slope = false
+floor_constant_speed = true
 floor_block_on_wall = false
 floor_max_angle = 3.14159
 floor_snap_length = 18.0
 platform_floor_layers = 4278190082
 platform_wall_layers = 2
 script = ExtResource("1_dvh5r")
+WallTouch = NodePath("Area2D")
 
 [node name="PlaceHolder Fennec" type="Sprite2D" parent="."]
 show_behind_parent = true
@@ -32,7 +39,7 @@ script = ExtResource("3_jyttq")
 
 [node name="Cam" type="Camera2D" parent="."]
 position = Vector2(1.33514e-05, -1.19209e-06)
-position_smoothing_speed = 2000.0
+position_smoothing_speed = 4.0
 script = ExtResource("4_qhq0l")
 
 [node name="HitBox" type="CollisionShape2D" parent="."]
@@ -40,6 +47,15 @@ shape = SubResource("CapsuleShape2D_krp03")
 debug_color = Color(0.387981, 0.355622, 1, 0.42)
 script = ExtResource("3_7vs75")
 
-[node name="Timer" type="Timer" parent="."]
-process_callback = 0
-wait_time = 1.5
+[node name="Jump" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_qrngc")
+
+[node name="M1Step" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_gc6ea")
+
+[node name="Area2D" type="Area2D" parent="."]
+disable_mode = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, -14)
+shape = SubResource("RectangleShape2D_rn333")
