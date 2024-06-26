@@ -13,22 +13,20 @@ radius = 12.0
 height = 42.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rn333"]
-size = Vector2(29, 4)
+size = Vector2(34, 4)
 
-[node name="Fenc 360" type="CharacterBody2D" node_paths=PackedStringArray("WallTouch")]
+[node name="Fenc 360" type="CharacterBody2D"]
 process_mode = 3
 position = Vector2(299, 89)
 disable_mode = 2
-slide_on_ceiling = false
+collision_layer = 0
 floor_stop_on_slope = false
 floor_constant_speed = true
-floor_block_on_wall = false
 floor_max_angle = 3.14159
 floor_snap_length = 18.0
 platform_floor_layers = 4278190082
 platform_wall_layers = 2
 script = ExtResource("1_dvh5r")
-WallTouch = NodePath("Area2D")
 
 [node name="PlaceHolder Fennec" type="Sprite2D" parent="."]
 show_behind_parent = true
@@ -53,9 +51,13 @@ stream = ExtResource("6_qrngc")
 [node name="M1Step" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("7_gc6ea")
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Wall" type="Area2D" parent="."]
 disable_mode = 2
+collision_layer = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(0, -14)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Wall"]
+position = Vector2(0, -15)
 shape = SubResource("RectangleShape2D_rn333")
+
+[connection signal="body_entered" from="Wall" to="." method="_is_wall_touch"]
+[connection signal="body_exited" from="Wall" to="." method="_wall_not_touch"]

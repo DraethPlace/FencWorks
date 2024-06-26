@@ -20,7 +20,7 @@ var TurnSpeed = Speed
 var HoldTimer: Timer
 var Steps : float
 var stepping = 0
-@export var WallTouch: Area2D
+@export var WallTouch = 0
 #Mach 1 = 150
 #Mach 2 = 300
 #Mach 3 = 450
@@ -29,7 +29,7 @@ var stepping = 0
 
 func _physics_process(delta):
 	# Handle physics
-	if not is_on_floor():
+	if not is_on_floor() or WallTouch == 1:
 		if Midair <1:
 			velocity.y= sin(rotation)*Speed
 			Speed= cos(rotation)*Speed
@@ -41,6 +41,8 @@ func _physics_process(delta):
 				velocity.y = 19000
 			if not rotation == 0:
 				rotation = lerp_angle(rotation, 0, 0.2)
+		elif WallTouch == 1:
+			velocity.y = 250
 
 	if Input.is_action_pressed("crouch"):
 		if abs(Speed)> 50 and Input.is_action_just_pressed("crouch"):
@@ -121,6 +123,35 @@ func _physics_process(delta):
 			elif not Speed == 0:
 				Speed = 0
 				MachTurn = 0
+
+	if is_on_floor() or WallTouch == 1:
+		if Input.is_action_just_pressed("jump") and is_on_floor():
+			$Jump.play()
+			set_up_direction(Vector2.UP)
+			if not round(abs(rotation_degrees)) == 90:
+				Speed = cos(rotation)*Speed
+			elif WallTouch == 1:
+				position.x += ((int(LR == "L")*2)-1)*25
+				velocity.y = -JumpVel
+				print(velocity.y)
+				Speed = ((int(LR == "L")*2)-1)*350
+			else:
+				velocity.y= -JumpVel * sin(rotation)*Speed
+				Speed = cos(rotation)*Speed
+			Jump = 1
+			Midair = 10
+			Speed -= -JumpVel * sin(rotation)
+			print(round(rotation_degrees))
+			if not round(abs(rotation_degrees)) == 90:
+				velocity.y += -JumpVel * cos(rotation) * int(WallTouch==0)
+			else:
+				velocity.y = -JumpVel*0.8
+			rotation=0
+	if Input.is_action_just_released("jump") and velocity.y < -200:
+		velocity.y = -200
+
+	move_and_slide()
+
 	if is_on_floor():
 		#actually moves player
 		if SensorDir == "D":
@@ -137,29 +168,12 @@ func _physics_process(delta):
 			Midair=0
 	elif Midair >= 10:
 		velocity.x= Speed
-	#jumping
-	if is_on_floor():
-		if Input.is_action_just_pressed("jump") and is_on_floor():
-			$Jump.play()
-			set_up_direction(Vector2.UP)
-			Speed = cos(rotation)*Speed
-			if is_on_wall_only():
-				velocity.y == JumpVel
-			elif abs(rotation_degrees) == 90:
-				velocity.y == JumpVel/2
-			else:
-				velocity.y= sin(rotation)*Speed
-			Jump = 1
-			Midair = 10
-			Speed += -JumpVel * cos(deg_to_rad(rotation_degrees+90))
-			velocity.y += -JumpVel * cos(rotation)
-			rotation=0
-	if Input.is_action_just_released("jump") and velocity.y < -200:
-		velocity.y = -200
-	move_and_slide()
+
+		#jumping
+	
 	
 	#Wraps the angle and Slope Physics
-	if is_on_wall_only():
+	if WallTouch == 0 and is_on_floor_only():
 		var normal: Vector2 = get_floor_normal()
 		rotation =  lerp_angle(rotation, deg_to_rad(wrapf(rad_to_deg(normal.angle())+90, 180, -180)), .5)
 		if ((Speed < 50 and SensorDir == "R" and LR == "R") or (Speed > -50 and SensorDir == "L" and LR == "L")):
@@ -178,20 +192,20 @@ func _physics_process(delta):
 	else:
 		CtrlLock = "N"
 	#handles The surface direction, wallrunning, ceiling running all that good sonis stuff
-	if dash == 1 or is_on_floor():
+	if (dash == 1 or is_on_floor()):
 		if SensorDir == "U" and abs(Speed) < 100:
 			set_up_direction(Vector2.UP)
 			velocity.y = 50
 		if round(rotation_degrees) <= 40 and round(rotation_degrees) >= -40:
 			SensorDir = "D"
 			set_up_direction(Vector2.UP)
-		elif round(rotation_degrees) <= -41 and round(rotation_degrees) >= -129:
+		elif round(rotation_degrees) <= -41 and round(rotation_degrees) >= -129 and WallTouch == 0:
 			SensorDir = "R"
 			set_up_direction(Vector2.LEFT)
-		elif round(rotation_degrees) >= 41 and round(rotation_degrees) <= 129:
+		elif round(rotation_degrees) >= 41 and round(rotation_degrees) <= 129 and WallTouch == 0:
 			SensorDir = "L"
 			set_up_direction(Vector2.RIGHT)
-		elif dash == 1:
+		elif dash == 1 and WallTouch == 0:
 			SensorDir = "U"
 			set_up_direction(Vector2.DOWN)
 	if dash == 0:
@@ -221,3 +235,12 @@ func steppering():
 func roundy1000thee(x):
 	return (x *1000)/1
 
+func _is_wall_touch(body):
+	if body.name == "TileMap" and not Input.is_action_pressed("jump"):
+		WallTouch = 1
+	else:
+		WallTouch = 0
+
+
+func _wall_not_touch(body):
+	WallTouch = 0
