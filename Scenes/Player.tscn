@@ -13,10 +13,11 @@ radius = 12.0
 height = 42.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rn333"]
-size = Vector2(34, 4)
+size = Vector2(36, 4)
 
 [node name="Fenc 360" type="CharacterBody2D"]
 process_mode = 3
+top_level = true
 position = Vector2(299, 89)
 disable_mode = 2
 collision_layer = 0
@@ -24,8 +25,8 @@ floor_stop_on_slope = false
 floor_constant_speed = true
 floor_max_angle = 3.14159
 floor_snap_length = 18.0
-platform_floor_layers = 4278190082
-platform_wall_layers = 2
+platform_floor_layers = 4278190080
+platform_wall_layers = 1
 script = ExtResource("1_dvh5r")
 
 [node name="PlaceHolder Fennec" type="Sprite2D" parent="."]
@@ -50,6 +51,7 @@ stream = ExtResource("6_qrngc")
 
 [node name="M1Step" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("7_gc6ea")
+pitch_scale = 5.72
 
 [node name="Wall" type="Area2D" parent="."]
 disable_mode = 2

@@ -41,7 +41,7 @@ func _physics_process(delta):
 				velocity.y = 19000
 			if not rotation == 0:
 				rotation = lerp_angle(rotation, 0, 0.2)
-		elif WallTouch == 1:
+		elif WallTouch == 1 and not Input.is_action_pressed("jump"):
 			velocity.y = 250
 
 	if Input.is_action_pressed("crouch"):
@@ -125,27 +125,27 @@ func _physics_process(delta):
 				MachTurn = 0
 
 	if is_on_floor() or WallTouch == 1:
-		if Input.is_action_just_pressed("jump") and is_on_floor():
+		if Input.is_action_just_pressed("jump") and (is_on_floor() or WallTouch == 1):
 			$Jump.play()
 			set_up_direction(Vector2.UP)
-			if not round(abs(rotation_degrees)) == 90:
+			if round(abs(rotation_degrees)) == 90:
 				Speed = cos(rotation)*Speed
 			elif WallTouch == 1:
-				position.x += ((int(LR == "L")*2)-1)*25
-				velocity.y = -JumpVel
-				print(velocity.y)
+				Midair = 10
+				print(WallTouch)
 				Speed = ((int(LR == "L")*2)-1)*350
+				velocity.y = -JumpVel
 			else:
-				velocity.y= -JumpVel * sin(rotation)*Speed
+				velocity.y= sin(rotation)*Speed
 				Speed = cos(rotation)*Speed
 			Jump = 1
 			Midair = 10
 			Speed -= -JumpVel * sin(rotation)
-			print(round(rotation_degrees))
-			if not round(abs(rotation_degrees)) == 90:
-				velocity.y += -JumpVel * cos(rotation) * int(WallTouch==0)
-			else:
-				velocity.y = -JumpVel*0.8
+			if WallTouch == 0:
+				if not round(abs(rotation_degrees)) == 90:
+					velocity.y += -JumpVel * cos(rotation) 
+				else:
+					velocity.y = -JumpVel*0.8
 			rotation=0
 	if Input.is_action_just_released("jump") and velocity.y < -200:
 		velocity.y = -200
@@ -236,7 +236,8 @@ func roundy1000thee(x):
 	return (x *1000)/1
 
 func _is_wall_touch(body):
-	if body.name == "TileMap" and not Input.is_action_pressed("jump"):
+	print(body.name)
+	if body.name == "TileMap":
 		WallTouch = 1
 	else:
 		WallTouch = 0
