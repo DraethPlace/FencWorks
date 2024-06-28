@@ -21,6 +21,7 @@ var HoldTimer: Timer
 var Steps : float
 var stepping = 0
 @export var WallTouch = 0
+
 #Mach 1 = 150
 #Mach 2 = 300
 #Mach 3 = 450
@@ -28,8 +29,9 @@ var stepping = 0
 #Mach 5 = 750
 
 func _physics_process(delta):
+	var MachTween = get_tree().create_tween()
 	# Handle physics
-	if not is_on_floor() or WallTouch == 1:
+	if not is_on_floor() or not WallTouch == 0:
 		if Midair <1:
 			velocity.y= sin(rotation)*Speed
 			Speed= cos(rotation)*Speed
@@ -41,7 +43,7 @@ func _physics_process(delta):
 				velocity.y = 19000
 			if not rotation == 0:
 				rotation = lerp_angle(rotation, 0, 0.2)
-		elif WallTouch == 1 and not Input.is_action_pressed("jump"):
+		elif not WallTouch == 0 and not (Input.is_action_pressed("jump") or Midair > 8):
 			velocity.y = 250
 
 	if Input.is_action_pressed("crouch"):
@@ -80,28 +82,28 @@ func _physics_process(delta):
 	elif Speed > -1:
 		VelLR = "R"
 	
-	floor_snap_length= (((abs(Speed))/32)*2)+24
+	floor_snap_length= (((abs(Speed))/18)*2)+32
 	
 	# Code for changing speed around
 	var Dir = Input.get_axis("left", "right")
-	if Dir and ((CtrlLock == "L" and Input.is_action_pressed("right")) or (CtrlLock == "R" and Input.is_action_pressed("left")) or (CtrlLock == "N")) and not crouch == "S":
+	if Dir and (((CtrlLock == "L" or WallTouch == 1) and Input.is_action_pressed("right")) or ((CtrlLock == "R" or WallTouch ==-1) and Input.is_action_pressed("left")) or (CtrlLock == "N")) and not crouch == "S":
 		if (not (Speed/(abs(Speed)*Dir)) == 1) and abs(Speed)> 50:
 			if dash == 0:
-				Speed +=  Dir*Acceleration*2
+				Speed +=  Dir*Acceleration*2 * ((int(not WallTouch == 0)+1)*2)
 				CtrlLock = 0
 			if dash == 1:
 				if MachTurn == 0:
 					PrevSpeed = Speed + (((int(LR=="R")*2)-1)*50)
-					TurnSpeed = 1/(roundf(abs(Speed/100)))
+					TurnSpeed = 1/(roundf(abs(Speed/120)))
 					MachTurn = 1
 				else:
 					CtrlLock = "N"
-					Speed = (lerpf(roundf(Speed), roundf(PrevSpeed*0.5), TurnSpeed))
+					MachTween.tween_property(self , "Speed", roundf(PrevSpeed*0.5), TurnSpeed)
 				if abs(Speed) <= abs(PrevSpeed*0.5)+3:
 					MachTurn = 2
 				if MachTurn == 2:
 					if not abs(Speed) >= abs(PrevSpeed-10):
-						Speed = round(lerpf(roundf(Speed), roundf(-(PrevSpeed+((((int(LR=="L")*2)-1)*10)))), 0.8))
+						MachTween.tween_property(self, "Speed", roundf(-(PrevSpeed+((((int(LR=="L")*2)-1)*10)))), 0.8)
 					else:
 						Speed= -PrevSpeed
 						MachTurn=0
@@ -124,29 +126,28 @@ func _physics_process(delta):
 				Speed = 0
 				MachTurn = 0
 
-	if is_on_floor() or WallTouch == 1:
-		if Input.is_action_just_pressed("jump") and (is_on_floor() or WallTouch == 1):
+	if is_on_floor() or (not WallTouch == 0) or Midair <=15:
+		if Input.is_action_just_pressed("jump") and (is_on_floor() or (not WallTouch == 0) or Midair <= 15):
 			$Jump.play()
 			set_up_direction(Vector2.UP)
-			if round(abs(rotation_degrees)) == 90:
-				Speed = cos(rotation)*Speed
-			elif WallTouch == 1:
+			if abs(WallTouch) == 1:
 				Midair = 10
 				print(WallTouch)
-				Speed = ((int(LR == "L")*2)-1)*350
+				Speed = ((int(VelLR == "L")*2)-1)*350
 				velocity.y = -JumpVel
 			else:
 				velocity.y= sin(rotation)*Speed
 				Speed = cos(rotation)*Speed
 			Jump = 1
-			Midair = 10
+			Midair = 6
 			Speed -= -JumpVel * sin(rotation)
 			if WallTouch == 0:
 				if not round(abs(rotation_degrees)) == 90:
 					velocity.y += -JumpVel * cos(rotation) 
 				else:
-					velocity.y = -JumpVel*0.8
-			rotation=0
+					velocity.y = -JumpVel*0.8 * ((int(LR == "L")*2)-1)
+					print(velocity.y)
+					SensorDir = "D"
 	if Input.is_action_just_released("jump") and velocity.y < -200:
 		velocity.y = -200
 
@@ -217,8 +218,10 @@ func _physics_process(delta):
 				Speed = 50 *((int(VelLR=="L")*2)-1)
 			else:
 				set_up_direction(Vector2.UP)
-				velocity.y = 75
+				velocity.y = 100
 				Speed = 75 *((int(LR=="L")*2)-1)
+				SensorDir = "D"
+				set_up_direction(Vector2.UP)
 	else:
 		floor_max_angle=180
 #func _process(delta):
@@ -236,9 +239,9 @@ func roundy1000thee(x):
 	return (x *1000)/1
 
 func _is_wall_touch(body):
-	print(body.name)
+	print("AAAAAAAAAAAA")
 	if body.name == "TileMap":
-		WallTouch = 1
+		WallTouch = ((int(LR == "L")*2)-1)
 	else:
 		WallTouch = 0
 

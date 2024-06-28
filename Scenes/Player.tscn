@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://c6umigpttu0tc"]
+[gd_scene load_steps=11 format=3 uid="uid://c6umigpttu0tc"]
 
 [ext_resource type="Script" path="res://Scripts/Player/360 Movement.gd" id="1_dvh5r"]
 [ext_resource type="Texture2D" uid="uid://dvwuerayceb4i" path="res://Images/51473563858_e00396a563_b.jpg" id="2_ay0cf"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://Scripts/Player/Cam.gd" id="4_qhq0l"]
 [ext_resource type="AudioStream" uid="uid://dotue2tayy81c" path="res://Sounds/Player/Jump.wav" id="6_qrngc"]
 [ext_resource type="AudioStream" uid="uid://c7cgy8v76oixp" path="res://Sounds/Player/Step.wav" id="7_gc6ea"]
+[ext_resource type="Script" path="res://Scripts/Player/Wall.gd" id="8_asppx"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_krp03"]
 radius = 12.0
@@ -56,8 +57,9 @@ pitch_scale = 5.72
 [node name="Wall" type="Area2D" parent="."]
 disable_mode = 2
 collision_layer = 0
+script = ExtResource("8_asppx")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Wall"]
+[node name="Sens" type="CollisionShape2D" parent="Wall"]
 position = Vector2(0, -15)
 shape = SubResource("RectangleShape2D_rn333")
 
