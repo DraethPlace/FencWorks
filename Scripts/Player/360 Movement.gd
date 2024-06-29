@@ -29,7 +29,6 @@ var stepping = 0
 #Mach 5 = 750
 
 func _physics_process(delta):
-	var MachTween = get_tree().create_tween()
 	# Handle physics
 	if not is_on_floor() or not WallTouch == 0:
 		if Midair <1:
@@ -86,7 +85,7 @@ func _physics_process(delta):
 	
 	# Code for changing speed around
 	var Dir = Input.get_axis("left", "right")
-	if Dir and (((CtrlLock == "L" or WallTouch == 1) and Input.is_action_pressed("right")) or ((CtrlLock == "R" or WallTouch ==-1) and Input.is_action_pressed("left")) or (CtrlLock == "N")) and not crouch == "S":
+	if Dir and (((CtrlLock == "L" or WallTouch == -1) and Input.is_action_pressed("right")) or ((CtrlLock == "R" or WallTouch ==1) and Input.is_action_pressed("left")) or (CtrlLock == "N")) and not crouch == "S":
 		if (not (Speed/(abs(Speed)*Dir)) == 1) and abs(Speed)> 50:
 			if dash == 0:
 				Speed +=  Dir*Acceleration*2 * ((int(not WallTouch == 0)+1)*2)
@@ -98,12 +97,12 @@ func _physics_process(delta):
 					MachTurn = 1
 				else:
 					CtrlLock = "N"
-					MachTween.tween_property(self , "Speed", roundf(PrevSpeed*0.5), TurnSpeed)
-				if abs(Speed) <= abs(PrevSpeed*0.5)+3:
+					Speed = (lerpf(roundf(Speed), roundf(PrevSpeed*0.2), TurnSpeed))
+				if abs(Speed) <= abs(PrevSpeed*0.2)+3:
 					MachTurn = 2
 				if MachTurn == 2:
 					if not abs(Speed) >= abs(PrevSpeed-10):
-						MachTween.tween_property(self, "Speed", roundf(-(PrevSpeed+((((int(LR=="L")*2)-1)*10)))), 0.8)
+						Speed = round(lerpf(roundf(Speed), roundf(-(PrevSpeed+((((int(LR=="L")*2)-1)*10)))), 0.8))
 					else:
 						Speed= -PrevSpeed
 						MachTurn=0
@@ -218,10 +217,8 @@ func _physics_process(delta):
 				Speed = 50 *((int(VelLR=="L")*2)-1)
 			else:
 				set_up_direction(Vector2.UP)
-				velocity.y = 100
+				velocity.y = 75
 				Speed = 75 *((int(LR=="L")*2)-1)
-				SensorDir = "D"
-				set_up_direction(Vector2.UP)
 	else:
 		floor_max_angle=180
 #func _process(delta):
