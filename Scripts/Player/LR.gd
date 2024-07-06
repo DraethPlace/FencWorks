@@ -1,6 +1,6 @@
 extends Sprite2D
 
-func _physics_process(_delta):
+func _process(_delta):
 	if get_parent().LR == "L":
 		flip_h = true
 	else:

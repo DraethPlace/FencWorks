@@ -17,10 +17,10 @@ height = 42.0
 size = Vector2(36, 4)
 
 [node name="Fenc 360" type="CharacterBody2D"]
-process_mode = 3
+process_mode = 1
 top_level = true
+texture_filter = 1
 position = Vector2(299, 89)
-disable_mode = 2
 collision_layer = 0
 floor_stop_on_slope = false
 floor_constant_speed = true
@@ -38,8 +38,12 @@ texture = ExtResource("2_ay0cf")
 script = ExtResource("3_jyttq")
 
 [node name="Cam" type="Camera2D" parent="."]
+process_mode = 1
+texture_repeat = 1
 position = Vector2(1.33514e-05, -1.19209e-06)
-position_smoothing_speed = 4.0
+process_callback = 0
+position_smoothing_enabled = true
+position_smoothing_speed = 35.0
 script = ExtResource("4_qhq0l")
 
 [node name="HitBox" type="CollisionShape2D" parent="."]
@@ -60,7 +64,6 @@ collision_layer = 0
 script = ExtResource("8_asppx")
 
 [node name="Sens" type="CollisionShape2D" parent="Wall"]
-position = Vector2(0, -15)
 shape = SubResource("RectangleShape2D_rn333")
 
 [connection signal="body_entered" from="Wall" to="." method="_is_wall_touch"]

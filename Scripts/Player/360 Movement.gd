@@ -21,7 +21,6 @@ var HoldTimer: Timer
 var Steps : float
 var stepping = 0
 @export var WallTouch = 0
-
 #Mach 1 = 150
 #Mach 2 = 300
 #Mach 3 = 450
@@ -30,6 +29,7 @@ var stepping = 0
 
 func _physics_process(delta):
 	# Handle physics
+	var Twurn = create_tween()
 	if not is_on_floor() or not WallTouch == 0:
 		if Midair <1:
 			velocity.y= sin(rotation)*Speed
@@ -40,8 +40,10 @@ func _physics_process(delta):
 			velocity.y += (gravity * delta)
 			if velocity.y > 19000 and not is_on_floor():
 				velocity.y = 19000
-			if not rotation == 0:
-				rotation = lerp_angle(rotation, 0, 0.2)
+			if not round(rotation_degrees) == 0:
+				Twurn.tween_property(self, "rotation", 0, 0.2)
+			else:
+				Twurn.stop()
 		elif not WallTouch == 0 and not (Input.is_action_pressed("jump") or Midair > 8):
 			velocity.y = 250
 
@@ -80,9 +82,6 @@ func _physics_process(delta):
 		VelLR = "L"
 	elif Speed > -1:
 		VelLR = "R"
-	
-	floor_snap_length= (((abs(Speed))/18)*2)+32
-	
 	# Code for changing speed around
 	var Dir = Input.get_axis("left", "right")
 	if Dir and (((CtrlLock == "L" or WallTouch == -1) and Input.is_action_pressed("right")) or ((CtrlLock == "R" or WallTouch ==1) and Input.is_action_pressed("left")) or (CtrlLock == "N")) and not crouch == "S":
@@ -174,23 +173,27 @@ func _physics_process(delta):
 	
 	#Wraps the angle and Slope Physics
 	if WallTouch == 0 and is_on_floor_only():
-		var normal: Vector2 = get_floor_normal()
-		rotation =  lerp_angle(rotation, deg_to_rad(wrapf(rad_to_deg(normal.angle())+90, 180, -180)), .5)
 		if ((Speed < 50 and SensorDir == "R" and LR == "R") or (Speed > -50 and SensorDir == "L" and LR == "L")):
 			CtrlLock = SensorDir
 		else:
 			CtrlLock = "N"
 		if not roundf(absf((rotation_degrees)/10)) == 0:
 			if not CtrlLock == "N":
-				Speed -=((int(LR == "R")*2)-1)*10
+				Speed +=sin(round(deg_to_rad(rotation_degrees)))*25
 			elif SensorDir == "U" and dash == 1:
 				Speed += sin(round(deg_to_rad(rotation_degrees)))*15
 			if not SensorDir == "U" and dash ==1:
 				Speed -= sin(round(deg_to_rad(-rotation_degrees)))*13
 			else:
 				Speed -= sin(round(deg_to_rad(-rotation_degrees)))*18
+		var normal: Vector2 = get_floor_normal()
+		if not deg_to_rad(round(rotation_degrees)) == (wrapf(rad_to_deg(normal.angle())+90, 180, -180)):
+			rotation =  lerp_angle(rotation, deg_to_rad(wrapf(rad_to_deg(normal.angle())+90, 180, -180)), .5)
+			
 	else:
 		CtrlLock = "N"
+
+
 	#handles The surface direction, wallrunning, ceiling running all that good sonis stuff
 	if (dash == 1 or is_on_floor()):
 		if SensorDir == "U" and abs(Speed) < 100:
@@ -208,17 +211,18 @@ func _physics_process(delta):
 		elif dash == 1 and WallTouch == 0:
 			SensorDir = "U"
 			set_up_direction(Vector2.DOWN)
+		else:
+			set_up_direction(Vector2.UP)
+			velocity.y = 75
+			Speed = 75 *((int(LR=="L")*2)-1)
 	if dash == 0:
 		floor_max_angle=67.5
 		if round(abs(rotation_degrees)) > 67.5 or SensorDir == "U":
 			if not SensorDir == "U":
-				velocity.x = 75 *((int(VelLR=="L")*2)-1)
-				velocity.y = 0 
-				Speed = 50 *((int(VelLR=="L")*2)-1)
-			else:
 				set_up_direction(Vector2.UP)
-				velocity.y = 75
-				Speed = 75 *((int(LR=="L")*2)-1)
+				velocity.x = 75 *((int(VelLR=="L")*2)-1)
+				velocity.y = 10
+				Speed = 50 *((int(VelLR=="L")*2)-1)
 	else:
 		floor_max_angle=180
 #func _process(delta):
