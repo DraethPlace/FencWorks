@@ -225,12 +225,14 @@ func _physics_process(delta):
 				Speed = 50 *((int(VelLR=="L")*2)-1)
 	else:
 		floor_max_angle=180
-#func _process(delta):
-	#if is_on_floor():
-		#Steps += delta
-		#steppering()
-		#if stepping == 1 and not $M1Step.playing():
-			#$M1Step.play()
+
+	#Cam moverino
+	$"Cam".offset.x=  $"Cam".offset.x*-1
+	$"Cam".offset.y=  $"Cam".offset.y*-1
+	$"Cam".offset.x-= ((5*($"Cam".offset.x))+((velocity.x)))/150
+	$"Cam".offset.y-= (((5*($"Cam".offset.y))+((velocity.y)))/150)
+	$"Cam".offset.x=  $"Cam".offset.x*-1
+	$"Cam".offset.y=  $"Cam".offset.y*-1
 
 func steppering():
 	stepping = roundf(sin(Steps*(Speed*.001)) * 1)

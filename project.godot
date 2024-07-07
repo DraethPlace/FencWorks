@@ -14,12 +14,7 @@ config/name="FencWorks Godot"
 run/main_scene="res://Scenes/Base Level.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 run/max_fps=60
-run/delta_smoothing=false
 config/icon="res://icon.svg"
-
-[debug]
-
-settings/stdout/print_fps=true
 
 [display]
 
@@ -27,6 +22,7 @@ window/size/viewport_width=640
 window/size/viewport_height=360
 window/stretch/mode="viewport"
 window/stretch/scale_mode="integer"
+window/dpi/allow_hidpi=false
 
 [filesystem]
 
@@ -74,21 +70,49 @@ machdash={
 ]
 }
 
+[memory]
+
+limits/message_queue/max_size_mb=64
+
+[navigation]
+
+avoidance/thread_model/avoidance_use_multiple_threads=false
+avoidance/thread_model/avoidance_use_high_priority_threads=false
+
 [physics]
 
 2d/run_on_separate_thread=true
-common/max_physics_steps_per_frame=5
-common/physics_jitter_fix=0.0
-2d/default_gravity_vector=Vector2(0, -1)
+common/max_physics_steps_per_frame=30
+common/physics_jitter_fix=4.0
+2d/solver/solver_iterations=12
 
 [rendering]
 
 occlusion_culling/bvh_build_quality=1
 textures/canvas_textures/default_texture_filter=0
-lights_and_shadows/directional_shadow/soft_shadow_filter_quality=1
+gl_compatibility/nvidia_disable_threaded_optimization=false
+driver/threads/thread_model=2
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=0
+lights_and_shadows/positional_shadow/soft_shadow_filter_quality=0
 global_illumination/gi/use_half_resolution=true
-environment/ssao/quality=1
-environment/ssil/quality=1
+textures/default_filters/anisotropic_filtering_level=0
+camera/depth_of_field/depth_of_field_bokeh_shape=0
+camera/depth_of_field/depth_of_field_bokeh_quality=0
+environment/ssao/quality=0
+environment/ssil/quality=0
 anti_aliasing/screen_space_roughness_limiter/enabled=false
+textures/decals/filter=0
+textures/light_projectors/filter=0
 environment/glow/upscale_mode=0
+environment/screen_space_reflection/roughness_quality=0
+environment/subsurface_scattering/subsurface_scattering_quality=0
+environment/volumetric_fog/use_filter=0
 occlusion_culling/use_occlusion_culling=true
+
+[threading]
+
+worker_pool/low_priority_thread_ratio=0.5
+
+[xr]
+
+shaders/enabled=true
