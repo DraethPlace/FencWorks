@@ -8,8 +8,9 @@ extends CharacterBody2D
 @export var FallVel = 0
 @export var Speed = 0
 @export var Midair = 0
-@export var Jump = 0
+@export var midair = 0
 @export var MachTurn = 0
+var braking = 0
 var CtrlLock = 0
 var dash = 0
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
@@ -21,6 +22,7 @@ var HoldTimer: Timer
 var Steps : float
 var stepping = 0
 @export var WallTouch = 0
+@export var Special = 0
 #Mach 1 = 150
 #Mach 2 = 300
 #Mach 3 = 450
@@ -44,7 +46,7 @@ func _physics_process(delta):
 				Twurn.tween_property(self, "rotation", 0, 0.2)
 			else:
 				Twurn.stop()
-		elif not WallTouch == 0 and not (Input.is_action_pressed("jump") or Midair > 8):
+		elif not WallTouch == 0 and not (Input.is_action_pressed("midair") or Midair > 8):
 			velocity.y = 250
 
 	if Input.is_action_pressed("crouch"):
@@ -86,8 +88,9 @@ func _physics_process(delta):
 	var Dir = Input.get_axis("left", "right")
 	if Dir and (((CtrlLock == "L" or WallTouch == -1) and Input.is_action_pressed("right")) or ((CtrlLock == "R" or WallTouch ==1) and Input.is_action_pressed("left")) or (CtrlLock == "N")) and not crouch == "S":
 		if (not (Speed/(abs(Speed)*Dir)) == 1) and abs(Speed)> 50:
+			braking = 1
 			if dash == 0:
-				Speed +=  Dir*Acceleration*2 * ((int(not WallTouch == 0)+1)*2)
+				Speed +=  Dir*Acceleration*2 * ((int(not WallTouch == 0)+1))
 				CtrlLock = 0
 			if dash == 1:
 				if MachTurn == 0:
@@ -117,37 +120,43 @@ func _physics_process(delta):
 			Speed = 750* ((int(VelLR == "R")*2)-1)
 			MachTurn = 0
 	elif is_on_floor() and CtrlLock == "N":
+		braking = 0
 		if dash == 0:
 			if abs(Speed) > 5:
 				Speed -= Acceleration/1.5 * ((int(VelLR == "R")*2)-1)
 			elif not Speed == 0:
 				Speed = 0
 				MachTurn = 0
+	else:
+		braking = 0
 
 	if is_on_floor() or (not WallTouch == 0) or Midair <=15:
-		if Input.is_action_just_pressed("jump") and (is_on_floor() or (not WallTouch == 0) or Midair <= 15):
+		if Input.is_action_just_pressed("midair") and (is_on_floor() or (not WallTouch == 0) or Midair <= 15):
 			$Jump.play()
 			set_up_direction(Vector2.UP)
 			if abs(WallTouch) == 1:
 				Midair = 10
-				print(WallTouch)
 				Speed = ((int(VelLR == "L")*2)-1)*350
 				velocity.y = -JumpVel
 			else:
 				velocity.y= sin(rotation)*Speed
 				Speed = cos(rotation)*Speed
-			Jump = 1
-			Midair = 6
+			midair = 1
+			Midair = 5
 			Speed -= -JumpVel * sin(rotation)
 			if WallTouch == 0:
 				if not round(abs(rotation_degrees)) == 90:
 					velocity.y += -JumpVel * cos(rotation) 
 				else:
 					velocity.y = -JumpVel*0.8 * ((int(LR == "L")*2)-1)
-					print(velocity.y)
 					SensorDir = "D"
-	if Input.is_action_just_released("jump") and velocity.y < -200:
+	if Input.is_action_just_released("midair") and velocity.y < -200:
 		velocity.y = -200
+	if Input.is_action_just_pressed("midair") and Midair > 15 and Special == 0:
+		Speed += Dir*400
+		Special = 1
+	elif Midair < 15:
+		Special = 0
 
 	move_and_slide()
 
@@ -168,7 +177,7 @@ func _physics_process(delta):
 	elif Midair >= 10:
 		velocity.x= Speed
 
-		#jumping
+		#midairing
 	
 	
 	#Wraps the angle and Slope Physics
@@ -177,9 +186,10 @@ func _physics_process(delta):
 			CtrlLock = SensorDir
 		else:
 			CtrlLock = "N"
-		if not roundf(absf((rotation_degrees)/10)) == 0:
+		if not roundf(absf((rotation_degrees)/20)) == 0:
 			if not CtrlLock == "N":
-				Speed +=sin(round(deg_to_rad(rotation_degrees)))*25
+				braking = 1
+				Speed +=sin(round(deg_to_rad(rotation_degrees)))*5
 			elif SensorDir == "U" and dash == 1:
 				Speed += sin(round(deg_to_rad(rotation_degrees)))*15
 			if not SensorDir == "U" and dash ==1:
@@ -242,7 +252,6 @@ func roundy1000thee(x):
 	return (x *1000)/1
 
 func _is_wall_touch(body):
-	print("AAAAAAAAAAAA")
 	if body.name == "TileMap":
 		WallTouch = ((int(LR == "L")*2)-1)
 	else:
