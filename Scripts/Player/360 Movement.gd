@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 @export var LR = "R"
 @export var Acceleration = 10
-@export var MaxSpeed = 200.0
+@export var MaxSpeed = 150.0
 @export var JumpVel = 650.0
 @export var SensorDir = "D"
 @export var FallVel = 0
@@ -46,8 +46,6 @@ func _physics_process(delta):
 				Twurn.tween_property(self, "rotation", 0, 0.2)
 			else:
 				Twurn.stop()
-		elif not WallTouch == 0 and not (Input.is_action_pressed("midair") or Midair > 8):
-			velocity.y = 250
 
 	if Input.is_action_pressed("crouch"):
 		if abs(Speed)> 50 and Input.is_action_just_pressed("crouch"):
@@ -127,6 +125,7 @@ func _physics_process(delta):
 			elif not Speed == 0:
 				Speed = 0
 				MachTurn = 0
+				braking = 0
 	else:
 		braking = 0
 
@@ -135,14 +134,13 @@ func _physics_process(delta):
 			$Jump.play()
 			set_up_direction(Vector2.UP)
 			if abs(WallTouch) == 1:
-				Midair = 10
+				Midair = 15
 				Speed = ((int(VelLR == "L")*2)-1)*350
 				velocity.y = -JumpVel
 			else:
 				velocity.y= sin(rotation)*Speed
 				Speed = cos(rotation)*Speed
-			midair = 1
-			Midair = 5
+				Midair = 5
 			Speed -= -JumpVel * sin(rotation)
 			if WallTouch == 0:
 				if not round(abs(rotation_degrees)) == 90:
@@ -152,8 +150,10 @@ func _physics_process(delta):
 					SensorDir = "D"
 	if Input.is_action_just_released("midair") and velocity.y < -200:
 		velocity.y = -200
-	if Input.is_action_just_pressed("midair") and Midair > 15 and Special == 0:
-		Speed += Dir*400
+	if Input.is_action_just_pressed("midair") and Midair > 15 and Special == 0 and WallTouch == 0:
+		if not abs(Speed) >= 500:
+			Speed = Dir*500
+		velocity.y = -175
 		Special = 1
 	elif Midair < 15:
 		Special = 0
@@ -177,9 +177,6 @@ func _physics_process(delta):
 	elif Midair >= 10:
 		velocity.x= Speed
 
-		#midairing
-	
-	
 	#Wraps the angle and Slope Physics
 	if WallTouch == 0 and is_on_floor_only():
 		if ((Speed < 50 and SensorDir == "R" and LR == "R") or (Speed > -50 and SensorDir == "L" and LR == "L")):
@@ -205,7 +202,7 @@ func _physics_process(delta):
 
 
 	#handles The surface direction, wallrunning, ceiling running all that good sonis stuff
-	if (dash == 1 or is_on_floor()):
+	if (dash == 1 or is_on_floor() and WallTouch == 0):
 		if SensorDir == "U" and abs(Speed) < 100:
 			set_up_direction(Vector2.UP)
 			velocity.y = 50
@@ -256,6 +253,7 @@ func _is_wall_touch(body):
 		WallTouch = ((int(LR == "L")*2)-1)
 	else:
 		WallTouch = 0
+	print(WallTouch)
 
 
 func _wall_not_touch(body):

@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://Scripts/Player/360 Movement.gd" id="1_ef2gf"]
 [ext_resource type="Texture2D" uid="uid://dvwuerayceb4i" path="res://Images/Player/Character/51473563858_e00396a563_b.jpg" id="2_y44k8"]
-[ext_resource type="Script" path="res://Scripts/Player/LR.gd" id="3_nj7sx"]
-[ext_resource type="Script" path="res://Scripts/Player/Cam.gd" id="4_ixecw"]
+[ext_resource type="Script" path="res://Scripts/Player/GFX/LR.gd" id="3_nj7sx"]
+[ext_resource type="Script" path="res://Scripts/Player/GFX/Cam.gd" id="4_ixecw"]
 
 [sub_resource type="GDScript" id="GDScript_tchwl"]
 script/source = "extends Area2D
