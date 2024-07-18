@@ -46,7 +46,9 @@ func _physics_process(delta):
 				Twurn.tween_property(self, "rotation", 0, 0.2)
 			else:
 				Twurn.stop()
-
+		if Midair < 10 and not WallTouch == 0:
+			velocity.y = 100
+		
 	if Input.is_action_pressed("crouch"):
 		if abs(Speed)> 50 and Input.is_action_just_pressed("crouch"):
 			crouch = "S"
@@ -85,7 +87,7 @@ func _physics_process(delta):
 	# Code for changing speed around
 	var Dir = Input.get_axis("left", "right")
 	if Dir and (((CtrlLock == "L" or WallTouch == -1) and Input.is_action_pressed("right")) or ((CtrlLock == "R" or WallTouch ==1) and Input.is_action_pressed("left")) or (CtrlLock == "N")) and not crouch == "S":
-		if (not (Speed/(abs(Speed)*Dir)) == 1) and abs(Speed)> 50:
+		if (not (Speed/(abs(Speed)*Dir)) == 1) and abs(Speed)> 100:
 			braking = 1
 			if dash == 0:
 				Speed +=  Dir*Acceleration*2 * ((int(not WallTouch == 0)+1))
@@ -206,6 +208,7 @@ func _physics_process(delta):
 		if SensorDir == "U" and abs(Speed) < 100:
 			set_up_direction(Vector2.UP)
 			velocity.y = 50
+			SensorDir = "D"
 		if round(rotation_degrees) <= 40 and round(rotation_degrees) >= -40:
 			SensorDir = "D"
 			set_up_direction(Vector2.UP)
@@ -219,17 +222,24 @@ func _physics_process(delta):
 			SensorDir = "U"
 			set_up_direction(Vector2.DOWN)
 		else:
+			SensorDir = "D"
 			set_up_direction(Vector2.UP)
 			velocity.y = 75
 			Speed = 75 *((int(LR=="L")*2)-1)
 	if dash == 0:
 		floor_max_angle=67.5
-		if round(abs(rotation_degrees)) > 67.5 or SensorDir == "U":
+		if (round(abs(rotation_degrees)) > 67.5 or SensorDir == "U") and WallTouch == 0:
+			Midair = 20
 			if not SensorDir == "U":
 				set_up_direction(Vector2.UP)
-				velocity.x = 75 *((int(VelLR=="L")*2)-1)
-				velocity.y = 10
-				Speed = 50 *((int(VelLR=="L")*2)-1)
+				velocity.x = 75 *((int(LR=="L")*2)-1)
+				velocity.y = 25
+				Speed = 100 *((int(LR=="L")*2)-1)
+			else:
+				if Midair < 5:
+					velocity.y = 200
+					Speed = 75 *((int(LR=="L")*2)-1)
+			SensorDir = "D"
 	else:
 		floor_max_angle=180
 
