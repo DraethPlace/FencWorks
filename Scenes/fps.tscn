@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://d373q6mjdgvj0"]
+[gd_scene load_steps=2 format=3 uid="uid://bwq1vvh0mj5m1"]
 
-[ext_resource type="Script" path="res://Scripts/HUD/FPS.gd" id="1_u441v"]
+[ext_resource type="Script" path="res://Scripts/Player/HUD/FPS.gd" id="1_iuvnw"]
 
 [node name="FPS" type="Control"]
 layout_mode = 3
@@ -15,4 +15,4 @@ offset_bottom = -20.0
 [node name="Text" type="Label" parent="CanvasLayer"]
 offset_right = 40.0
 offset_bottom = 23.0
-script = ExtResource("1_u441v")
+script = ExtResource("1_iuvnw")

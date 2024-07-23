@@ -22,12 +22,12 @@ func _process(delta):
 			texture = load("res://Images/Player/GFX/Dust1.png")
 			explosiveness = abs(0.5/get_parent().get_parent().Speed)
 			amount = 4
-			process_material.angle_min = rotation
-			process_material.angle_max = rotation
+			process_material.angle_min= -get_parent().get_parent().rotation_degrees
+			process_material.angle_max = -get_parent().get_parent().rotation_degrees
 			process_material.scale_min = 1
 			process_material.scale_max = 1
-			process_material.gravity.x = sin(rotation)*-50
-			process_material.gravity.y = cos(rotation)*-50
+			process_material.gravity.x = sin(-get_parent().get_parent().rotation)*-65
+			process_material.gravity.y = cos(-get_parent().get_parent().rotation)*-65
 			if not abs(get_parent().get_parent().Speed)< 101:
 				speed_scale = 1
 	print(one_shot, finish)

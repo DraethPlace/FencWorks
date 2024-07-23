@@ -6,6 +6,8 @@ var finish = 0
 func _process(delta):
 	if (abs(get_parent().get_parent().Speed) < 100 or not get_parent().get_parent().Midair == 0) or (not abs((get_parent().get_parent().Speed)) >= 600 and not get_parent().get_parent().braking == 0):
 		one_shot = true
+		process_material.angle_min= -get_parent().get_parent().rotation_degrees
+		process_material.angle_max = -get_parent().get_parent().rotation_degrees
 		if finish==1 or not get_parent().get_parent().Midair == 0:
 			emitting = 0
 	else:

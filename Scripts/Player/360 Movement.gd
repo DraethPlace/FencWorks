@@ -58,7 +58,7 @@ func _physics_process(delta):
 		crouch = "N"
 		if dash == 1:
 			MaxSpeed = 750
-			Acceleration = 10
+			Acceleration = 8
 		else:
 			Acceleration = 12.5
 			MaxSpeed = 200
@@ -84,12 +84,14 @@ func _physics_process(delta):
 	# Code for changing speed around
 	var Dir = Input.get_axis("left", "right")
 	if Dir and (((CtrlLock == "L" or WallTouch == -1) and Input.is_action_pressed("right")) or ((CtrlLock == "R" or WallTouch ==1) and Input.is_action_pressed("left")) or (CtrlLock == "N")) and not crouch == "S":
-		if (not (Speed/(abs(Speed)*Dir)) == 1) and abs(Speed)> 100:
+		if (not (round(Speed)/round((abs(Speed))*Dir)) == 1) and abs(Speed)> 100:
 			braking = 1
 			if dash == 0:
-				Speed +=  Dir*Acceleration*2 * ((int(not WallTouch == 0)+1))
+				if abs(Speed)> 170:
+					Speed = 200* ((int(VelLR == "R")*2)-1)
+				Speed +=  (Dir*Acceleration)*2
 				CtrlLock = 0
-			if dash == 1:
+			if dash == 1 and is_on_floor():
 				if MachTurn == 0:
 					PrevSpeed = Speed + (((int(LR=="R")*2)-1)*50)
 					TurnSpeed = 1/(roundf(abs(Speed/120)))
@@ -105,16 +107,14 @@ func _physics_process(delta):
 					else:
 						Speed= -PrevSpeed
 						MachTurn=0
+			else:
+				Speed +=  Dir*Acceleration*2 * ((int(not WallTouch == 0)+1))
+				CtrlLock = 0
 		elif abs(Speed) < MaxSpeed:
 			PrevSpeed= Speed + (((int(LR=="R")*2)-1)*50)
 			TurnSpeed = 1/(roundf(abs(Speed/100)))
 			Speed += Dir*Acceleration
 			CtrlLock = 0
-			MachTurn = 0
-		elif abs(Speed)> 750:
-			TurnSpeed = 1/(roundf(abs(Speed/100)))
-			PrevSpeed= Speed + (((int(LR=="R")*2)-1)*50)
-			Speed = 750* ((int(VelLR == "R")*2)-1)
 			MachTurn = 0
 	elif is_on_floor() and CtrlLock == "N":
 		braking = 0
@@ -127,6 +127,10 @@ func _physics_process(delta):
 				braking = 0
 	else:
 		braking = 0
+
+	if abs(Speed)> 750:
+		Speed = 750* ((int(VelLR == "R")*2)-1)
+		MachTurn = 0
 
 	if is_on_floor() or (not WallTouch == 0) or Midair <=15:
 		if Input.is_action_just_pressed("midair") and (is_on_floor() or (not WallTouch == 0) or Midair <= 15):
@@ -186,14 +190,14 @@ func _physics_process(delta):
 				braking = 1
 				Speed +=sin(round(deg_to_rad(rotation_degrees)))*5
 			elif SensorDir == "U" and dash == 1:
-				Speed += sin(round(deg_to_rad(rotation_degrees)))*15
+				Speed += sin(round(deg_to_rad(rotation_degrees)))*13
 			if not SensorDir == "U" and dash ==1:
-				Speed -= sin(round(deg_to_rad(-rotation_degrees)))*13
+				Speed -= sin(round(deg_to_rad(-rotation_degrees)))*11
 			else:
 				Speed -= sin(round(deg_to_rad(-rotation_degrees)))*18
 		var normal: Vector2 = get_floor_normal()
-		if not deg_to_rad(round(rotation_degrees)) == (wrapf(rad_to_deg(normal.angle())+90, 180, -180)):
-			rotation =  lerp_angle(rotation, deg_to_rad(wrapf(rad_to_deg(normal.angle())+90, 180, -180)), .5)
+		if WallTouch == 0:
+			rotation =  lerp_angle(rotation, deg_to_rad(wrapf(rad_to_deg(normal.angle())+90, 180, -180)), .6)
 			
 	else:
 		CtrlLock = "N"
@@ -220,7 +224,6 @@ func _physics_process(delta):
 		else:
 			SensorDir = "D"
 			set_up_direction(Vector2.UP)
-			velocity.y = 75
 			Speed = 75 *((int(LR=="L")*2)-1)
 	if dash == 0:
 		floor_max_angle=67.5
@@ -233,8 +236,8 @@ func _physics_process(delta):
 				Speed = 100 *((int(LR=="L")*2)-1)
 			else:
 				if Midair < 5:
-					velocity.y = 200
-					Speed = 75 *((int(LR=="L")*2)-1)
+					velocity.x = 75 *((int(LR=="L")*2)-1)
+					Speed = 75 *((int(SensorDir=="L")*2)-1)
 			SensorDir = "D"
 	else:
 		floor_max_angle=180
@@ -260,7 +263,7 @@ func roundy1000thee(x):
 	return (x *1000)/1
 
 func _is_wall_touch(body):
-	if body.name == "TileMap":
+	if body.name == "TileMap" and dash == 0:
 		WallTouch = ((int(LR == "L")*2)-1)
 	else:
 		if not WallTouch == 0:

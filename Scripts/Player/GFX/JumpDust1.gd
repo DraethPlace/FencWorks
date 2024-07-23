@@ -10,6 +10,7 @@ func _process(delta):
 	one_shot=1
 	if finish==1:
 		emitting = 0
+		queue_free()
 
 
 func _on_finished():

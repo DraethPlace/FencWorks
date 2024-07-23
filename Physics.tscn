@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cfubjk0iihs4r"]
+[gd_scene load_steps=8 format=3 uid="uid://bhtxb7uhi7hmc"]
 
 [ext_resource type="Script" path="res://Scripts/Player/360 Movement.gd" id="1_ef2gf"]
 [ext_resource type="Texture2D" uid="uid://dvwuerayceb4i" path="res://Images/Player/Character/51473563858_e00396a563_b.jpg" id="2_y44k8"]

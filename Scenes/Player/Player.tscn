@@ -11,9 +11,9 @@
 [ext_resource type="AudioStream" uid="uid://dotue2tayy81c" path="res://Sounds/Player/Jump.wav" id="6_qrngc"]
 [ext_resource type="AudioStream" uid="uid://c7cgy8v76oixp" path="res://Sounds/Player/Step.wav" id="7_gc6ea"]
 [ext_resource type="Script" path="res://Scripts/Player/GFX/WalkDust.gd" id="7_orl46"]
-[ext_resource type="Script" path="res://Scripts/HUD/PlayerSpeed.gd" id="8_4fvp1"]
+[ext_resource type="Script" path="res://Scripts/Player/HUD/PlayerSpeed.gd" id="8_4fvp1"]
 [ext_resource type="Script" path="res://Scripts/Player/Wall.gd" id="8_asppx"]
-[ext_resource type="Script" path="res://Scripts/HUD/FPS.gd" id="14_bl3lo"]
+[ext_resource type="Script" path="res://Scripts/Player/HUD/FPS.gd" id="14_bl3lo"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_b21ds"]
 size = Vector2(351.5, 48.762)
