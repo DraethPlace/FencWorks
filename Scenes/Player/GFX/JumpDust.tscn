@@ -1,0 +1,75 @@
+[gd_scene load_steps=10 format=3 uid="uid://cp3a7n3ba103g"]
+
+[ext_resource type="Texture2D" uid="uid://55njsv537gxy" path="res://Images/Player/GFX/JumpDust.png" id="1_86qqn"]
+[ext_resource type="Script" path="res://Scripts/Player/GFX/JumpDust1.gd" id="2_e4lis"]
+[ext_resource type="Script" path="res://Scripts/Player/GFX/JumpDust2.gd" id="3_oxlqw"]
+
+[sub_resource type="Curve" id="Curve_toi0s"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.625, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_3u2mq"]
+curve = SubResource("Curve_toi0s")
+
+[sub_resource type="Curve" id="Curve_io38u"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.5, 1), 0.0, 0.0, 0, 0, Vector2(0.625, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_ft5bo"]
+curve = SubResource("Curve_io38u")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_jil4n"]
+particle_flag_disable_z = true
+emission_shape_offset = Vector3(0, -64, 0)
+direction = Vector3(-1, -3, 0)
+spread = 0.0
+initial_velocity_min = 2000.0
+initial_velocity_max = 2000.0
+angular_velocity_min = 90.0
+angular_velocity_max = 180.0
+gravity = Vector3(0, 98, 0)
+scale_curve = SubResource("CurveTexture_ft5bo")
+alpha_curve = SubResource("CurveTexture_3u2mq")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_xk15q"]
+particle_flag_disable_z = true
+emission_shape_offset = Vector3(0, -64, 0)
+direction = Vector3(1, -3, 0)
+spread = 0.0
+initial_velocity_min = 2000.0
+initial_velocity_max = 2000.0
+angular_velocity_min = 90.0
+angular_velocity_max = 180.0
+gravity = Vector3(0, 98, 0)
+scale_curve = SubResource("CurveTexture_ft5bo")
+alpha_curve = SubResource("CurveTexture_3u2mq")
+
+[node name="JumpDust1" type="GPUParticles2D"]
+z_index = 10
+z_as_relative = false
+position = Vector2(-165.75, -190.048)
+amount = 1
+sub_emitter = NodePath(".")
+process_material = SubResource("ParticleProcessMaterial_jil4n")
+texture = ExtResource("1_86qqn")
+lifetime = 1.8
+speed_scale = 2.3
+fixed_fps = 60
+interpolate = false
+script = ExtResource("2_e4lis")
+
+[node name="JumpDust2" type="GPUParticles2D" parent="."]
+z_index = 10
+z_as_relative = false
+amount = 1
+sub_emitter = NodePath(".")
+process_material = SubResource("ParticleProcessMaterial_xk15q")
+texture = ExtResource("1_86qqn")
+lifetime = 1.8
+speed_scale = 2.3
+fixed_fps = 60
+interpolate = false
+script = ExtResource("3_oxlqw")
+
+[connection signal="finished" from="." to="." method="_on_finished"]
+[connection signal="finished" from="JumpDust2" to="JumpDust2" method="_on_finished"]

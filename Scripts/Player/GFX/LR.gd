@@ -5,5 +5,4 @@ func _process(_delta):
 		flip_h = true
 	else:
 		flip_h = false
-	scale.y = get_parent().get_node("HitBox").shape.height * .001
-	scale.x = get_parent().get_node("HitBox").shape.radius * .003
+	scale.y = get_parent().get_node("HitBox").shape.height/42

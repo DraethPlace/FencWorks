@@ -21,7 +21,7 @@ var TurnSpeed = Speed
 var HoldTimer: Timer
 var Steps : float
 var stepping = 0
-@export var WallTouch = 0
+var WallTouch = 0
 @export var Special = 0
 #Mach 1 = 150
 #Mach 2 = 300
@@ -31,7 +31,6 @@ var stepping = 0
 
 func _physics_process(delta):
 	# Handle physics
-	var Twurn = create_tween()
 	if not is_on_floor() or not WallTouch == 0:
 		if Midair <1:
 			velocity.y= sin(rotation)*Speed
@@ -43,9 +42,7 @@ func _physics_process(delta):
 			if velocity.y > 19000 and not is_on_floor():
 				velocity.y = 19000
 			if not round(rotation_degrees) == 0:
-				Twurn.tween_property(self, "rotation", 0, 0.2)
-			else:
-				Twurn.stop()
+				rotation = lerpf(rotation, 0, 0.2)
 		if Midair < 10 and not WallTouch == 0:
 			velocity.y = 100
 		
@@ -133,16 +130,15 @@ func _physics_process(delta):
 
 	if is_on_floor() or (not WallTouch == 0) or Midair <=15:
 		if Input.is_action_just_pressed("midair") and (is_on_floor() or (not WallTouch == 0) or Midair <= 15):
+			Midair = 14
 			$Jump.play()
 			set_up_direction(Vector2.UP)
 			if abs(WallTouch) == 1:
-				Midair = 15
 				Speed = ((int(VelLR == "L")*2)-1)*350
 				velocity.y = -JumpVel
 			else:
 				velocity.y= sin(rotation)*Speed
 				Speed = cos(rotation)*Speed
-				Midair = 5
 			Speed -= -JumpVel * sin(rotation)
 			if WallTouch == 0:
 				if not round(abs(rotation_degrees)) == 90:
@@ -243,6 +239,12 @@ func _physics_process(delta):
 	else:
 		floor_max_angle=180
 
+	if WallTouch < 1 and not WallTouch == 0:
+		if not abs(WallTouch) <= 0.1:
+			WallTouch -= (WallTouch/abs(WallTouch))*0.05
+		else:
+			WallTouch = 0
+
 	#Cam moverino
 	$"Cam".offset.x=  $"Cam".offset.x*-1
 	$"Cam".offset.y=  $"Cam".offset.y*-1
@@ -253,7 +255,6 @@ func _physics_process(delta):
 
 func steppering():
 	stepping = roundf(sin(Steps*(Speed*.001)) * 1)
-	print(stepping)
 
 func roundy1000thee(x):
 	return (x *1000)/1
@@ -262,9 +263,12 @@ func _is_wall_touch(body):
 	if body.name == "TileMap":
 		WallTouch = ((int(LR == "L")*2)-1)
 	else:
-		WallTouch = 0
+		if not WallTouch == 0:
+			WallTouch = (WallTouch/abs(WallTouch))*0.05
 	print(WallTouch)
 
 
 func _wall_not_touch(body):
-	WallTouch = 0
+	if not WallTouch == 0:
+		WallTouch -= (WallTouch/abs(WallTouch))*0.05
+	print(WallTouch)

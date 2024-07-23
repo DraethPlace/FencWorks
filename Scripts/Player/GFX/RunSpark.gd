@@ -40,4 +40,3 @@ func _process(delta):
 		process_material.gravity.y = cos(rotation)*-30
 		process_material.velocity_pivot.x = sin(rotation)*-100
 		process_material.velocity_pivot.y = cos(rotation)*-100
-	print(one_shot, finish)

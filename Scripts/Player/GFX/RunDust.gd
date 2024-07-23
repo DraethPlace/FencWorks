@@ -4,11 +4,10 @@ var type = "D"
 var finish = 0
 
 func _process(delta):
-	if (round(get_parent().get_parent().Speed) < 100 or not get_parent().get_parent().Midair == 0) or (not abs((get_parent().get_parent().Speed)) >= 600 and not get_parent().get_parent().braking == 0):
+	if (abs(get_parent().get_parent().Speed) < 100 or not get_parent().get_parent().Midair == 0) or (not abs((get_parent().get_parent().Speed)) >= 600 and not get_parent().get_parent().braking == 0):
 		one_shot = true
 		if finish==1 or not get_parent().get_parent().Midair == 0:
 			emitting = 0
-		speed_scale = (abs(get_parent().get_parent().Speed+0.1))
 	else:
 		if abs((get_parent().get_parent().Speed)) >= 600:
 			emitting = 1
@@ -31,10 +30,8 @@ func _process(delta):
 			process_material.angular_velocity_max = 0
 			if not abs(get_parent().get_parent().Speed)< 101:
 				speed_scale = 1
-	print(one_shot, finish)
 
 
 func _on_finished():
-	print("allalal")
 	if one_shot == true:
 		finish = 1
