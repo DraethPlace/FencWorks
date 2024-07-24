@@ -256,6 +256,16 @@ func _physics_process(delta):
 	$"Cam".offset.x=  $"Cam".offset.x*-1
 	$"Cam".offset.y=  $"Cam".offset.y*-1
 
+	if Input.is_key_pressed(KEY_ALT) and Input.is_action_pressed("fullscreen"):
+		print("h")
+		if Input.is_action_just_released("fullscreen"):
+			if not get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN:
+				get_window().mode = Window.MODE_EXCLUSIVE_FULLSCREEN
+				print("f")
+			else:
+				print("w")
+				get_window().mode = Window.MODE_WINDOWED
+
 func steppering():
 	stepping = roundf(sin(Steps*(Speed*.001)) * 1)
 
