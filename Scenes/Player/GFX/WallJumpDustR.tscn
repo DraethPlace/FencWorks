@@ -1,0 +1,79 @@
+[gd_scene load_steps=10 format=3 uid="uid://cx8kiau7fucjc"]
+
+[ext_resource type="Texture2D" uid="uid://55njsv537gxy" path="res://Images/Player/GFX/JumpDust.png" id="1_cvkn5"]
+[ext_resource type="Script" path="res://Scripts/Player/GFX/WallDustR.gd" id="2_2ryvo"]
+[ext_resource type="Script" path="res://Scripts/Player/GFX/WallDustR2.gd" id="3_bxnfo"]
+
+[sub_resource type="Curve" id="Curve_toi0s"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.625, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_3u2mq"]
+curve = SubResource("Curve_toi0s")
+
+[sub_resource type="Curve" id="Curve_io38u"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.25, 1), 0.0, 0.0, 0, 0, Vector2(0.625, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_ft5bo"]
+curve = SubResource("Curve_io38u")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_my6jj"]
+particle_flag_disable_z = true
+emission_shape_offset = Vector3(0, -64, 0)
+angle_min = 90.0
+angle_max = 90.0
+direction = Vector3(-1, -3, 0)
+spread = 0.0
+initial_velocity_min = 2000.0
+initial_velocity_max = 2000.0
+angular_velocity_min = 90.0
+angular_velocity_max = 180.0
+gravity = Vector3(0, 98, 0)
+scale_curve = SubResource("CurveTexture_ft5bo")
+alpha_curve = SubResource("CurveTexture_3u2mq")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7aqmy"]
+particle_flag_disable_z = true
+emission_shape_offset = Vector3(0, -64, 0)
+angle_min = 90.0
+angle_max = 90.0
+direction = Vector3(1, -3, 0)
+spread = 0.0
+initial_velocity_min = 2000.0
+initial_velocity_max = 2000.0
+angular_velocity_min = 90.0
+angular_velocity_max = 180.0
+gravity = Vector3(0, 98, 0)
+scale_curve = SubResource("CurveTexture_ft5bo")
+alpha_curve = SubResource("CurveTexture_3u2mq")
+
+[node name="WallDustR" type="GPUParticles2D"]
+z_index = 10
+z_as_relative = false
+position = Vector2(-165.75, -190.048)
+amount = 1
+sub_emitter = NodePath(".")
+process_material = SubResource("ParticleProcessMaterial_my6jj")
+texture = ExtResource("1_cvkn5")
+lifetime = 1.8
+speed_scale = 2.3
+fixed_fps = 60
+interpolate = false
+script = ExtResource("2_2ryvo")
+
+[node name="WallDustR2" type="GPUParticles2D" parent="."]
+z_index = 10
+z_as_relative = false
+amount = 1
+sub_emitter = NodePath(".")
+process_material = SubResource("ParticleProcessMaterial_7aqmy")
+texture = ExtResource("1_cvkn5")
+lifetime = 1.8
+speed_scale = 2.3
+fixed_fps = 60
+interpolate = false
+script = ExtResource("3_bxnfo")
+
+[connection signal="finished" from="." to="." method="_on_finished"]
+[connection signal="finished" from="WallDustR2" to="WallDustR2" method="_on_finished"]

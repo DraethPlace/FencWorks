@@ -141,12 +141,12 @@ func _physics_process(delta):
 				Speed = ((int(VelLR == "L")*2)-1)*350
 				velocity.y = -JumpVel
 			else:
-				velocity.y= sin(rotation)*Speed
-				Speed = cos(rotation)*Speed
+				velocity.y= roundi(sin(rotation)*Speed)
+				Speed = roundi(cos(rotation)*Speed)
 			Speed -= -JumpVel * sin(rotation)
 			if WallTouch == 0:
 				if not round(abs(rotation_degrees)) == 90:
-					velocity.y += -JumpVel * cos(rotation) 
+					velocity.y += roundi(-JumpVel * cos(rotation))
 				else:
 					velocity.y = -JumpVel*0.8 * ((int(LR == "L")*2)-1)
 					SensorDir = "D"

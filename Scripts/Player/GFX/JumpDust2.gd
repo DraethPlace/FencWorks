@@ -13,6 +13,5 @@ func _process(delta):
 
 
 func _on_finished():
-
 	if one_shot == true:
 		finish = 1

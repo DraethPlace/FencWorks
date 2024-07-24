@@ -12,10 +12,11 @@ func _process(delta):
 			if speed_scale < 1:
 				speed_scale =1
 			else:
-				speed_scale = 0.35/((abs(get_parent().get_parent().Speed))+0.1)
+				speed_scale = 0.2/((abs(get_parent().get_parent().Speed))+0.1)
 	else:
 		if not abs((get_parent().get_parent().Speed)) >= 600:
 			emitting = 1
+			modulate.a = 255
 			if one_shot == true:
 				one_shot = 0
 			finish = 0

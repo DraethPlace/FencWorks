@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://c6umigpttu0tc"]
+[gd_scene load_steps=29 format=3 uid="uid://c6umigpttu0tc"]
 
 [ext_resource type="Script" path="res://Scripts/Player/360 Movement.gd" id="1_dvh5r"]
 [ext_resource type="Texture2D" uid="uid://dvwuerayceb4i" path="res://Images/Player/Character/51473563858_e00396a563_b.jpg" id="2_ej13g"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://Scripts/Player/GFX/RunDust.gd" id="4_rw4vl"]
 [ext_resource type="AudioStream" uid="uid://dotue2tayy81c" path="res://Sounds/Player/Jump.wav" id="6_qrngc"]
 [ext_resource type="AudioStream" uid="uid://c7cgy8v76oixp" path="res://Sounds/Player/Step.wav" id="7_gc6ea"]
+[ext_resource type="Script" path="res://Scripts/Player/GFX/SlideDust.gd" id="7_kdow7"]
 [ext_resource type="Script" path="res://Scripts/Player/GFX/WalkDust.gd" id="7_orl46"]
 [ext_resource type="Script" path="res://Scripts/Player/HUD/PlayerSpeed.gd" id="8_4fvp1"]
 [ext_resource type="Script" path="res://Scripts/Player/Wall.gd" id="8_asppx"]
@@ -42,6 +43,14 @@ gravity = Vector3(0, 0, 0)
 scale_curve = SubResource("CurveTexture_yt106")
 alpha_curve = SubResource("CurveTexture_vo24u")
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_2y1i2"]
+particle_flag_disable_z = true
+emission_shape_scale = Vector3(1, -1, 1)
+spread = 0.0
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveTexture_yt106")
+alpha_curve = SubResource("CurveTexture_vo24u")
+
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_tu4fa"]
 particles_animation = true
 particles_anim_h_frames = 2
@@ -68,7 +77,7 @@ radius = 12.0
 height = 42.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rn333"]
-size = Vector2(38, 4)
+size = Vector2(40, 4)
 
 [node name="Fenc 360" type="CharacterBody2D"]
 process_mode = 1
@@ -85,7 +94,7 @@ script = ExtResource("1_dvh5r")
 
 [node name="PlaceHolder Fennec" type="Sprite2D" parent="."]
 visibility_layer = 3
-z_index = 5
+z_index = 11
 texture = ExtResource("2_ej13g")
 script = ExtResource("3_jyttq")
 
@@ -108,6 +117,18 @@ one_shot = true
 fixed_fps = 60
 interpolate = false
 script = ExtResource("7_orl46")
+
+[node name="SlideDust" type="GPUParticles2D" parent="CollisionShape2D"]
+show_behind_parent = true
+emitting = false
+amount = 2
+sub_emitter = NodePath(".")
+process_material = SubResource("ParticleProcessMaterial_2y1i2")
+texture = ExtResource("4_a8cyj")
+one_shot = true
+fixed_fps = 60
+interpolate = false
+script = ExtResource("7_kdow7")
 
 [node name="RunDust" type="GPUParticles2D" parent="CollisionShape2D"]
 show_behind_parent = true
@@ -132,7 +153,7 @@ position = Vector2(1.33514e-05, -1.19209e-06)
 zoom = Vector2(1.5, 1.5)
 process_callback = 0
 position_smoothing_enabled = true
-position_smoothing_speed = 35.0
+position_smoothing_speed = 30.0
 
 [node name="Jump" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_qrngc")
@@ -147,7 +168,7 @@ collision_layer = 0
 script = ExtResource("8_asppx")
 
 [node name="Sens" type="CollisionShape2D" parent="Wall"]
-position = Vector2(0, -7)
+position = Vector2(0, -8)
 shape = SubResource("RectangleShape2D_rn333")
 
 [node name="Control" type="Control" parent="."]
@@ -177,6 +198,7 @@ text = "Hai!!!"
 script = ExtResource("14_bl3lo")
 
 [connection signal="finished" from="CollisionShape2D/WalkDust" to="CollisionShape2D/WalkDust" method="_on_finished"]
+[connection signal="finished" from="CollisionShape2D/SlideDust" to="CollisionShape2D/SlideDust" method="_on_finished"]
 [connection signal="finished" from="CollisionShape2D/RunDust" to="CollisionShape2D/RunDust" method="_on_finished"]
 [connection signal="body_entered" from="Wall" to="." method="_is_wall_touch"]
 [connection signal="body_exited" from="Wall" to="." method="_wall_not_touch"]
