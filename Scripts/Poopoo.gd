@@ -3,7 +3,8 @@ extends AudioStreamPlayer
 var cool = "neat"
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	cool = randf_range(1, 7)
+	cool = randi_range(1, 7)
+	print(cool)
 	if cool == 1:
 		stream = load("res://Music/TestingTides/Can't Take It Anymore (Chemical City) - Toree Genesis .mp3")
 	if cool == 2:
