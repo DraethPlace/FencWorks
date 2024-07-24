@@ -72,7 +72,7 @@ scale_curve = SubResource("CurveTexture_lorck")
 anim_speed_min = 4.0
 anim_speed_max = 4.0
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_krp03"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_oyywm"]
 radius = 12.0
 height = 42.0
 
@@ -87,7 +87,7 @@ collision_layer = 0
 floor_stop_on_slope = false
 floor_constant_speed = true
 floor_max_angle = 3.14159
-floor_snap_length = 30.0
+floor_snap_length = 12.0
 platform_floor_layers = 4278190080
 platform_wall_layers = 1
 script = ExtResource("1_dvh5r")
@@ -142,18 +142,9 @@ interpolate = false
 script = ExtResource("4_rw4vl")
 
 [node name="HitBox" type="CollisionShape2D" parent="."]
-shape = SubResource("CapsuleShape2D_krp03")
+shape = SubResource("CapsuleShape2D_oyywm")
 debug_color = Color(0.387981, 0.355622, 1, 0.42)
 script = ExtResource("3_7vs75")
-
-[node name="Cam" type="Camera2D" parent="."]
-process_mode = 1
-texture_repeat = 1
-position = Vector2(1.33514e-05, -1.19209e-06)
-zoom = Vector2(1.5, 1.5)
-process_callback = 0
-position_smoothing_enabled = true
-position_smoothing_speed = 30.0
 
 [node name="Jump" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_qrngc")
@@ -196,6 +187,15 @@ offset_right = 39.0
 offset_bottom = 21.0
 text = "Hai!!!"
 script = ExtResource("14_bl3lo")
+
+[node name="Cam" type="Camera2D" parent="."]
+process_mode = 1
+texture_repeat = 1
+position = Vector2(1.33514e-05, -1.19209e-06)
+zoom = Vector2(1.5, 1.5)
+process_callback = 0
+position_smoothing_enabled = true
+position_smoothing_speed = 30.0
 
 [connection signal="finished" from="CollisionShape2D/WalkDust" to="CollisionShape2D/WalkDust" method="_on_finished"]
 [connection signal="finished" from="CollisionShape2D/SlideDust" to="CollisionShape2D/SlideDust" method="_on_finished"]

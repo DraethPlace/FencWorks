@@ -10,13 +10,18 @@ Created by Sahara Studios
 Find us on Tumblr https://www.tumblr.com/blog/sahara-studios-dev
 
 Ascii Generator : https://www.patorjk.com/
-MentalBox/KelvinDaFloof : Programming help, Bug Fixing (scratch version)
+MentalBox: Programming help, Bug Fixing (scratch version)
 Godot Team: Engine Used
 Godot Community Server (https://discord.gg/4JBkykG) : Programming Help (Godot version)
 Sonic Physics Guide (https://info.sonicretro.org/Sonic_Physics_Guide) : 360 Physics documentation
-Aseprite Team: Sprite Tool used
+Aseprite: Sprite Tool used
 Tour De Pizza : Inspiration, Temporary Sounds
 GalaxyTrail : Inspiration
 Sonic Team : Inspiration
 Dimps : Inspiration
 R3tronaut: Temporary BG music (Can't Take It Anymore / Chemical City Toree Genesis)
+Sonic Mania Megamix Team: Temporary BG music (Special Stage Remix)
+Dustin Wyatt: OG Special Stage Music
+MusicbyHydra + Glumboy: Temporary BG music (Shangri La)
+Sonic 1 The Next Level Team:  Temporary BG music (Gust Planet Act 1)
+ClasscyJitto + Ronan "Mr. Sauceman" De Castel: Temporary BG music (Overcooked Meat Lover, Ground Bound)
