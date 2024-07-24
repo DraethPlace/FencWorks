@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://c6umigpttu0tc"]
+[gd_scene load_steps=30 format=3 uid="uid://c6umigpttu0tc"]
 
 [ext_resource type="Script" path="res://Scripts/Player/360 Movement.gd" id="1_dvh5r"]
 [ext_resource type="Texture2D" uid="uid://dvwuerayceb4i" path="res://Images/Player/Character/51473563858_e00396a563_b.jpg" id="2_ej13g"]
@@ -15,6 +15,7 @@
 [ext_resource type="Script" path="res://Scripts/Player/HUD/PlayerSpeed.gd" id="8_4fvp1"]
 [ext_resource type="Script" path="res://Scripts/Player/Wall.gd" id="8_asppx"]
 [ext_resource type="Script" path="res://Scripts/Player/HUD/FPS.gd" id="14_bl3lo"]
+[ext_resource type="Script" path="res://Scripts/Player/GFX/Cam.gd" id="16_5oyht"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_b21ds"]
 size = Vector2(351.5, 48.762)
@@ -195,7 +196,8 @@ position = Vector2(1.33514e-05, -1.19209e-06)
 zoom = Vector2(1.5, 1.5)
 process_callback = 0
 position_smoothing_enabled = true
-position_smoothing_speed = 30.0
+position_smoothing_speed = 20.0
+script = ExtResource("16_5oyht")
 
 [connection signal="finished" from="CollisionShape2D/WalkDust" to="CollisionShape2D/WalkDust" method="_on_finished"]
 [connection signal="finished" from="CollisionShape2D/SlideDust" to="CollisionShape2D/SlideDust" method="_on_finished"]
