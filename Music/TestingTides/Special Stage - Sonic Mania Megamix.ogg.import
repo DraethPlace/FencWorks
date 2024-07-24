@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dy64igxym4cu1"
+path="res://.godot/imported/Special Stage - Sonic Mania Megamix.ogg-71cdcd20d548c81b34487680a08e8ad9.oggvorbisstr"
+
+[deps]
+
+source_file="res://Music/TestingTides/Special Stage - Sonic Mania Megamix.ogg"
+dest_files=["res://.godot/imported/Special Stage - Sonic Mania Megamix.ogg-71cdcd20d548c81b34487680a08e8ad9.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

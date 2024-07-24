@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cj86ybuociesa"
+path="res://.godot/imported/Gust Planet Act 1 - Sonic 1 The Next Level.mp3-129ccfdff7ef2cd49c91a8a1a9b93e0e.mp3str"
+
+[deps]
+
+source_file="res://Music/TestingTides/Gust Planet Act 1 - Sonic 1 The Next Level.mp3"
+dest_files=["res://.godot/imported/Gust Planet Act 1 - Sonic 1 The Next Level.mp3-129ccfdff7ef2cd49c91a8a1a9b93e0e.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

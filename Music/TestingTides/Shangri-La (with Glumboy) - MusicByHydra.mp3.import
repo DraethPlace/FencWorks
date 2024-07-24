@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://3irrawb86qr6"
+path="res://.godot/imported/Shangri-La (with Glumboy) - MusicByHydra.mp3-cf048e201fcf72af2049ed72cbb0bfcf.mp3str"
+
+[deps]
+
+source_file="res://Music/TestingTides/Shangri-La (with Glumboy) - MusicByHydra.mp3"
+dest_files=["res://.godot/imported/Shangri-La (with Glumboy) - MusicByHydra.mp3-cf048e201fcf72af2049ed72cbb0bfcf.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

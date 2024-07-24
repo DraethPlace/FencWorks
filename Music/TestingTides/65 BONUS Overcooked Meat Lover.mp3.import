@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bka0i0h0fdf7y"
+path="res://.godot/imported/65 BONUS Overcooked Meat Lover.mp3-8b56144fb93bea12d0178a55dbae0f66.mp3str"
+
+[deps]
+
+source_file="res://Music/TestingTides/65 BONUS Overcooked Meat Lover.mp3"
+dest_files=["res://.godot/imported/65 BONUS Overcooked Meat Lover.mp3-8b56144fb93bea12d0178a55dbae0f66.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
