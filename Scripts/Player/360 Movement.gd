@@ -87,10 +87,12 @@ func _physics_process(delta):
 		if (not (round(Speed)/round((abs(Speed))*Dir)) == 1) and abs(Speed)> 100:
 			braking = 1
 			if dash == 0:
-				if abs(Speed)> 170:
+				if abs(Speed)> 190 and abs(Speed)<235:
 					Speed = 200* ((int(VelLR == "R")*2)-1)
 				Speed +=  (Dir*Acceleration)*2
 				CtrlLock = 0
+				if abs(Speed)> 190 and abs(Speed)<235:
+					Speed = 200* ((int(VelLR == "R")*2)-1)
 			if dash == 1 and is_on_floor():
 				if MachTurn == 0:
 					PrevSpeed = Speed + (((int(LR=="R")*2)-1)*50)

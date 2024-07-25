@@ -11,10 +11,13 @@ config_version=5
 [application]
 
 config/name="FencWorks Godot"
-run/main_scene="res://Scenes/Base Level.tscn"
+run/main_scene="res://Scenes/Intros/SAGE.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 run/max_fps=60
+boot_splash/image="res://Images/Bootsplash/AAAAAAAAAAAAAAAAAAAAAAAAAA.png"
+boot_splash/use_filter=false
 config/icon="res://icon.svg"
+boot_splash/minimum_display_time=4000
 
 [display]
 
@@ -98,7 +101,6 @@ common/physics_jitter_fix=4.0
 
 [rendering]
 
-occlusion_culling/bvh_build_quality=1
 textures/canvas_textures/default_texture_filter=0
 gl_compatibility/nvidia_disable_threaded_optimization=false
 lights_and_shadows/directional_shadow/soft_shadow_filter_quality=0
@@ -112,6 +114,7 @@ environment/ssil/quality=0
 anti_aliasing/screen_space_roughness_limiter/enabled=false
 textures/decals/filter=0
 textures/light_projectors/filter=0
+occlusion_culling/occlusion_rays_per_thread=420
 environment/glow/upscale_mode=0
 environment/screen_space_reflection/roughness_quality=0
 environment/subsurface_scattering/subsurface_scattering_quality=0

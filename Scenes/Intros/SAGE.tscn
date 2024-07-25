@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://cv70bjjyydf7q"]
+
+[ext_resource type="VideoStream" path="res://Video/SAGE 2024 Opening/Splash.ogv" id="1_s2pmp"]
+[ext_resource type="Script" path="res://Video/SAGE 2024 Opening/Intro.gd" id="2_w1vun"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+offset_right = 1920.0
+offset_bottom = 1088.0
+scale = Vector2(0.5, 0.5)
+stream = ExtResource("1_s2pmp")
+volume_db = -15.0
+autoplay = true
+script = ExtResource("2_w1vun")
+
+[connection signal="finished" from="VideoStreamPlayer" to="VideoStreamPlayer" method="_on_finished"]

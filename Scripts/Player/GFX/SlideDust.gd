@@ -19,7 +19,7 @@ func _process(delta):
 			if one_shot == true:
 				one_shot = 0
 			finish = 0
-			explosiveness =0.2
+			explosiveness =0.1
 			amount =2
 			process_material.scale_min = 1
 			process_material.scale_max = 1
