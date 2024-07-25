@@ -49,7 +49,7 @@ func _physics_process(delta):
 	if Input.is_action_pressed("crouch"):
 		if abs(Speed)> 50 and Input.is_action_just_pressed("crouch"):
 			crouch = "S"
-			Acceleration = 2
+			Acceleration = 0.005
 		elif abs(Speed) < 50:
 			Acceleration = 12.5
 			MaxSpeed = 100
@@ -230,8 +230,9 @@ func _physics_process(delta):
 		if (round(abs(rotation_degrees)) > 67.5 or SensorDir == "U") and WallTouch == 0:
 			Midair = 20
 			if not SensorDir == "U":
+				SensorDir = "D"
 				set_up_direction(Vector2.UP)
-				velocity.x = 75 *((int(LR=="L")*2)-1)
+				velocity.x = 75 *((int(VelLR=="L")*2)-1)
 				velocity.y = 25
 				Speed = 100 *((int(LR=="L")*2)-1)
 			else:
@@ -256,15 +257,14 @@ func _physics_process(delta):
 	$"Cam".offset.x=  $"Cam".offset.x*-1
 	$"Cam".offset.y=  $"Cam".offset.y*-1
 
-	if Input.is_key_pressed(KEY_ALT) and Input.is_action_pressed("fullscreen"):
+	if Input.is_key_pressed(KEY_ALT) and Input.is_action_just_released("fullscreen"):
 		print("h")
-		if Input.is_action_just_released("fullscreen"):
-			if not get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN:
-				get_window().mode = Window.MODE_EXCLUSIVE_FULLSCREEN
-				print("f")
-			else:
-				print("w")
-				get_window().mode = Window.MODE_WINDOWED
+		if not get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN:
+			get_window().mode = Window.MODE_EXCLUSIVE_FULLSCREEN
+			print("f")
+		else:
+			print("w")
+			get_window().mode = Window.MODE_WINDOWED
 
 func steppering():
 	stepping = roundf(sin(Steps*(Speed*.001)) * 1)

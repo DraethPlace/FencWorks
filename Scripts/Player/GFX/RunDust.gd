@@ -32,6 +32,8 @@ func _process(delta):
 			process_material.angular_velocity_max = 0
 			if not abs(get_parent().get_parent().Speed)< 101:
 				speed_scale = 1
+	process_material.angle_min= -get_parent().get_parent().rotation_degrees
+	process_material.angle_max = -get_parent().get_parent().rotation_degrees
 
 
 func _on_finished():
